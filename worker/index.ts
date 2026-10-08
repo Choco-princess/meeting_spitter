@@ -10,8 +10,13 @@ import {
   finalizeRecord,
   cleanReferences,
   type Transcript,
+  MinutesDetailSchema,
+  RecordSchema,
+  RecordReviewSchema,
+  applyRecordReview,
+  FALLBACK_RECORD_MODEL,
 } from "../shared/schema";
-import { REFINE_PROMPT, RECORD_PROMPT } from "./prompts";
+import { REFINE_PROMPT, RECORD_PROMPT, REVIEW_PROMPT, DETAIL_PROMPTS } from "./prompts";
 
 interface Env {
   GROQ_API_KEY: string;
@@ -26,6 +31,7 @@ class ApiError extends Error {
     public status: number,
     message: string,
     public retryAfter?: string,
+    public reduceTokensBy?: number,
   ) {
     super(message);
   }
@@ -33,6 +39,8 @@ class ApiError extends Error {
 const InputSchema = z.object({
   segments: z.array(SegmentSchema).min(1).max(2000),
   glossary: z.string().max(2000).optional(),
+  detail: MinutesDetailSchema.optional(),
+  candidate: RecordSchema.optional(),
 });
 const json = (
   body: unknown,
@@ -81,6 +89,12 @@ async function groq(
         503,
         "The AI service credential needs attention. Please contact the project owner.",
       );
+    if (r.status === 413 && route.startsWith("chat")) {
+      const limit = Number(message.match(/Limit[:\s]+(\d+)/i)?.[1]);
+      const requested = Number(message.match(/Requested[:\s]+(\d+)/i)?.[1]);
+      throw new ApiError(413, "This transcript and draft exceed the free model's request budget. Use a shorter excerpt or a lower minutes detail level.", undefined,
+        limit > 0 && requested > limit ? requested - limit + 256 : undefined);
+    }
     if (r.status === 413)
       throw new ApiError(
         413,
@@ -106,21 +120,27 @@ async function structured<T>(
   input: unknown,
   schema: z.ZodType<T>,
   name: string,
-): Promise<T> {
+  maxCompletionTokens = 3000,
+): Promise<{ value: T; model: string; warnings: string[] }> {
   const messages = [
     { role: "system", content: prompt },
     { role: "user", content: JSON.stringify(input) },
   ];
+  let budget = maxCompletionTokens;
+  let adjusted = false;
+  let activeModel = model;
+  const warnings: string[] = [];
   for (let attempt = 0; attempt < 2; attempt++) {
-    const response = await groq(
+    let response: any;
+    try { response = await groq(
       env,
       "chat/completions",
       JSON.stringify({
-        model,
+        model: activeModel,
         messages,
         temperature: 0.1,
         reasoning_effort: model === MODELS.record ? "medium" : "low",
-        max_completion_tokens: 3000,
+        max_completion_tokens: budget,
         response_format: {
           type: "json_schema",
           json_schema: {
@@ -131,12 +151,24 @@ async function structured<T>(
         },
       }),
       "application/json",
-    );
+    ); } catch (error) {
+      if (error instanceof ApiError && error.status === 429 && /daily quota/i.test(error.message) && activeModel === MODELS.record) {
+        activeModel = FALLBACK_RECORD_MODEL;
+        warnings.push(`The primary minutes model's free daily quota was unavailable. Used ${FALLBACK_RECORD_MODEL} for this request; review the AI draft.`);
+        budget = maxCompletionTokens; adjusted = false; attempt--; continue;
+      }
+      // A free-plan per-request token reservation can exceed its minute cap.
+      // Reduce only the output allowance; never truncate transcript content.
+      if (error instanceof ApiError && error.reduceTokensBy && !adjusted && budget - error.reduceTokensBy >= 1200) {
+        budget -= error.reduceTokensBy; adjusted = true; attempt--; continue;
+      }
+      throw error;
+    }
     const choice = response.choices?.[0];
     try {
       if (choice?.finish_reason !== "stop")
         throw new Error("Incomplete output");
-      return schema.parse(JSON.parse(choice.message.content));
+      return { value: schema.parse(JSON.parse(choice.message.content)), model: activeModel, warnings };
     } catch {
       if (attempt === 1)
         throw new ApiError(
@@ -162,8 +194,9 @@ async function handle(request: Request, env: Env) {
       promptVersion: PROMPT_VERSION,
       maxAudioBytes: MAX_AUDIO_BYTES,
       maxTranscriptChars: MAX_TRANSCRIPT_CHARS,
+      fallbackRecordModel: FALLBACK_RECORD_MODEL,
     });
-  if (!["/api/transcribe", "/api/refine", "/api/record"].includes(path))
+  if (!["/api/transcribe", "/api/refine", "/api/record", "/api/review"].includes(path))
     throw new ApiError(404, "Endpoint not found.");
   if (request.method !== "POST")
     throw new ApiError(405, "Use POST for this endpoint.");
@@ -267,27 +300,41 @@ async function handle(request: Request, env: Env) {
       413,
       "This transcript exceeds the current 14,000-character demo limit. Your raw transcript is available; please use a shorter recording.",
     );
-  if (path === "/api/refine")
-    return json(
-      await structured(
+  // The language stages need stable IDs and words. Numeric audio offsets are
+  // retained in the client and do not need to consume model input tokens.
+  const segments = input.data.segments.map(({ id, text }) => ({ id, text }));
+  if (path === "/api/refine") {
+    const output = await structured(
         env,
         MODELS.refinement,
         REFINE_PROMPT,
-        input.data,
+        { segments, glossary: input.data.glossary || "" },
         RefinementSchema,
         "refinement",
-      ),
-    );
+      );
+    return json({ ...output.value, model: output.model, promptVersion: PROMPT_VERSION });
+  }
+  if (path === "/api/review" && !input.data.candidate) throw new ApiError(400, "A draft meeting record is required for review.");
+  const prompt = `${path === "/api/review" ? REVIEW_PROMPT + "\n\n" : ""}${RECORD_PROMPT}\n\n${DETAIL_PROMPTS[input.data.detail || "standard"]}`;
+  const payload = { segments, ...(path === "/api/review" ? { candidate: input.data.candidate } : {}) };
+  const budget = input.data.segments.reduce((n, s) => n + s.text.length, 0) < 1500 ? 3000 : input.data.detail === "full" ? 4500 : input.data.detail === "detailed" ? 3500 : 3000;
+  if (path === "/api/review") {
+    const review = await structured(env, MODELS.record, prompt, payload, RecordReviewSchema, "meeting_review", budget);
+    const clean = cleanReferences(applyRecordReview(input.data.candidate!, review.value), input.data.segments);
+    return json({ ...clean, warnings: [...clean.warnings, ...review.warnings], model: review.model, promptVersion: PROMPT_VERSION });
+  }
   const draft = await structured(
     env,
     MODELS.record,
-    RECORD_PROMPT,
-    { segments: input.data.segments },
+    prompt,
+    payload,
     RecordDraftSchema,
     "meeting_record",
+    budget,
   );
-  const record = finalizeRecord(draft);
-  return json(cleanReferences(record, input.data.segments));
+  const record = finalizeRecord(draft.value);
+  const clean = cleanReferences(record, input.data.segments);
+  return json({ ...clean, warnings: [...clean.warnings, ...draft.warnings], model: draft.model, promptVersion: PROMPT_VERSION });
 }
 
 export default {

@@ -4,6 +4,7 @@ import {
   cleanReferences,
   markdown,
   MODELS,
+  applyRecordReview,
   type Transcript,
   type MeetingRecord,
 } from "../shared/schema";
@@ -37,6 +38,13 @@ const record: MeetingRecord = {
   openQuestions: [],
 };
 describe("faithful results", () => {
+  it("retains sound sections while targeted review removes only an unsupported task", () => {
+    const reviewed = applyRecordReview(record, { title: null, summary: null, minutes: null, decisionCandidates: null, taskCandidates: [], openQuestions: null });
+    expect(reviewed.minutes).toEqual(record.minutes);
+    expect(reviewed.decisions).toEqual(record.decisions);
+    expect(reviewed.tasks).toEqual([]);
+    expect(record.tasks).toHaveLength(1);
+  });
   it("applies a terminology patch without modifying the raw transcript or negation/numbers", () => {
     const r = applyCorrections(raw, [
       {
@@ -181,5 +189,14 @@ describe("API input and origin checks", () => {
       env,
     );
     expect(r.status).toBe(413);
+  });
+  it("rejects unknown detail levels and a review request without its draft", async () => {
+    for (const [path, body] of [
+      ["record", { segments: raw.segments, detail: "invent-more" }],
+      ["review", { segments: raw.segments, detail: "detailed" }],
+    ] as const) {
+      const response = await worker.fetch(new Request(`https://api.test/api/${path}`, { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(body) }), env);
+      expect(response.status).toBe(400);
+    }
   });
 });

@@ -9,6 +9,10 @@ import {
   RecordSchema,
   applyCorrections,
   type Result,
+  type Excerpt,
+  excerptNotice,
+  type MinutesDetail,
+  retainTranscripts,
 } from "../shared/schema";
 const API =
   import.meta.env.VITE_API_BASE ||
@@ -86,7 +90,7 @@ export async function call(
           data.error || "Please try again later.",
           response.status,
         );
-      const seconds = Math.max(1, Number.isFinite(delay) ? delay : 60);
+      const seconds = Math.max(1, Number.isFinite(delay) ? Math.ceil(delay) : 60);
       status(
         `Service busy. Retrying in ${Math.ceil(seconds)} seconds (${attempt + 1}/2)…`,
       );
@@ -100,12 +104,12 @@ export async function call(
   }
   throw new ServiceError("Please retry this stage.", 503);
 }
-export function validateFile(file: File) {
+export function validateFile(file: File, allowOversized = false) {
   if (!file.size)
     throw new Error(
       "This file is empty. Choose a recording with English speech.",
     );
-  if (file.size > MAX_AUDIO_BYTES)
+  if (file.size > MAX_AUDIO_BYTES && !allowOversized)
     throw new Error(
       "This file is larger than 24 MB. Choose a smaller recording.",
     );
@@ -119,9 +123,13 @@ export async function runPipeline(
   signal: AbortSignal,
   update: (result: Result) => void,
   progress: (stage: Stage, message: string) => void,
+  excerpt?: Excerpt,
+  minutesDetail: MinutesDetail = "standard",
+  review = false,
 ): Promise<Result> {
   validateFile(file);
   let result = previous;
+  if (result && (result.record || result.draftRecord) && ((result.minutesDetail || "standard") !== minutesDetail || (result.record && review && !result.correctnessReview))) result = retainTranscripts(result);
   if (!result) {
     progress("transcription", "Listening to your recording…");
     const form = new FormData();
@@ -134,13 +142,14 @@ export async function runPipeline(
     signal.throwIfAborted();
     result = {
       schemaVersion: "1.0",
-      filename: file.name,
+      filename: excerpt?.originalFilename || file.name,
       createdAt: new Date().toISOString(),
       models: MODELS,
       promptVersion: PROMPT_VERSION,
       raw,
       corrections: [],
-      warnings: [...raw.warnings],
+      warnings: [...raw.warnings, ...(excerpt ? [excerptNotice(excerpt)] : [])],
+      ...(excerpt ? { excerpt } : {}),
     };
     update(result);
   }
@@ -153,7 +162,7 @@ export async function runPipeline(
     );
   if (!result.refined) {
     progress("refinement", "Checking terminology and preserving context…");
-    const refined = RefinementSchema.parse(
+    const refined = RefinementSchema.extend({ model: z.string().optional() }).parse(
       await call(
         "refine",
         { segments: result.raw.segments, glossary },
@@ -167,25 +176,26 @@ export async function runPipeline(
       ...result,
       refined: applied.transcript,
       corrections: applied.corrections,
+      models: { ...result.models, refinement: refined.model || result.models.refinement },
       warnings: [
         ...result.warnings,
         ...(applied.corrections.some((c) => !c.applied)
           ? [
-              "Some proposed terminology edits were left unchanged because their original wording was ambiguous.",
+              "Some suggested edits were skipped. Expand Terminology changes to see why.",
             ]
           : []),
       ],
     };
     update(result);
   }
-  if (!result.record) {
+  if (!result.record && !result.draftRecord) {
     progress("record", "Writing minutes, decisions and next steps…");
     const data = z
-      .object({ record: RecordSchema, warnings: z.array(z.string()) })
+      .object({ record: RecordSchema, warnings: z.array(z.string()), model: z.string().optional(), promptVersion: z.string().optional() })
       .parse(
         await call(
           "record",
-          { segments: result.refined!.segments },
+          { segments: result.refined!.segments, detail: minutesDetail },
           signal,
           (m) => progress("record", m),
         ),
@@ -193,9 +203,32 @@ export async function runPipeline(
     signal.throwIfAborted();
     result = {
       ...result,
-      record: data.record,
+      ...(review ? { draftRecord: data.record } : { record: data.record }),
+      correctnessReview: false,
+      minutesDetail,
+      promptVersion: data.promptVersion || PROMPT_VERSION,
+      models: { ...result.models, record: data.model || result.models.record },
+      recordWarnings: data.warnings,
       warnings: [...result.warnings, ...data.warnings],
     };
+    update(result);
+  }
+  if (review && result.draftRecord && !result.record) {
+    progress("record", "Reviewing the draft against the transcript—checking facts, coverage and commitments…");
+    const data = z.object({ record: RecordSchema, warnings: z.array(z.string()), model: z.string().optional(), promptVersion: z.string().optional() }).parse(
+      await call("review", { segments: result.refined!.segments, candidate: result.draftRecord, detail: minutesDetail }, signal, (m) => progress("record", m)),
+    );
+    signal.throwIfAborted();
+    result = { ...result, record: data.record, correctnessReview: true,
+      models: { ...result.models, review: data.model || result.models.record },
+      promptVersion: data.promptVersion || PROMPT_VERSION,
+      recordWarnings: [...(result.recordWarnings || []), ...data.warnings],
+      warnings: [...new Set([...result.warnings, ...data.warnings])] };
+    update(result);
+  }
+  // If a user opts out after a failed review, the preserved draft remains usable.
+  if (!review && result.draftRecord && !result.record) {
+    result = { ...result, record: result.draftRecord, correctnessReview: false };
     update(result);
   }
   return result;

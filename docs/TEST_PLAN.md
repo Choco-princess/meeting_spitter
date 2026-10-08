@@ -9,6 +9,8 @@ Keep a working submission archive at every checkpoint. Avoid feature expansion u
 | Refinement | Misrecognized domain term; original unchanged; negation/numbers preserved; missing/overlapping/ambiguous/no-op patches skipped | Unit tests and live stage evaluation |
 | Minutes | Proposal-only, cancelled task, unassigned work, unresolved question, nearby name, later recap assigning owner | `stage-evaluation.json` with real API outputs |
 | Recovery | Cancellation, completed-stage reuse, temporary quota wait, daily quota error | Pipeline tests and actual free-quota retry during live tests |
+| Large-file excerpts | Valid large WAV and MP3; explicit opt-in; malformed/incomplete headers; bounded frame cuts; cancellation; every export discloses scope | Parser tests and real browser uploads |
+| Detail/review | Four levels on a fixed ten-minute transcript; targeted corrective review; cached draft on failure; actual fallback model metadata | Live outputs compared with an independent text reference |
 | Presentation/export | All tabs, source timestamp seek, TXT/Markdown/JSON/ZIP consistent, narrow viewport | Browser checks and exported canonical record |
 | Hidden checkpoint | Pre-download two unseen YouTube meeting clips, freeze commit/Worker version, randomly choose one, run once before inspecting its transcript | Selection manifest and full output; no prompt tuning on the selected clip before evaluation |
 

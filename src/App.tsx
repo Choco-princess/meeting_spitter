@@ -5,8 +5,13 @@ import {
   transcriptText,
   timeLabel,
   type Result,
+  MAX_AUDIO_BYTES,
+  MINUTES_DETAILS,
+  retainTranscripts,
+  type MinutesDetail,
 } from "../shared/schema";
 import { runPipeline, validateFile, type Stage } from "./api";
+import { prepareExcerpt, supportsExcerpt } from "./excerpt";
 
 type Tab = "minutes" | "tasks" | "raw" | "refined";
 const steps: { key: Stage; label: string; detail: string }[] = [
@@ -51,6 +56,10 @@ export default function App() {
   const [loadingSample, setLoadingSample] = useState(false);
   const [duration, setDuration] = useState(0);
   const [copyStatus, setCopyStatus] = useState("");
+  const [excerptMode, setExcerptMode] = useState(false);
+  const [minutesDetail, setMinutesDetail] = useState<MinutesDetail>("detailed");
+  const [reviewMinutes, setReviewMinutes] = useState(true);
+  const prepared = useRef<Awaited<ReturnType<typeof prepareExcerpt>> | undefined>(undefined);
   const fileInput = useRef<HTMLInputElement>(null);
   const audio = useRef<HTMLAudioElement>(null);
   const controller = useRef<AbortController | undefined>(undefined);
@@ -86,8 +95,10 @@ export default function App() {
     setDuration(0);
     setCopyStatus("");
     setTab("minutes");
+    setExcerptMode(false);
+    prepared.current = undefined;
     try {
-      validateFile(f);
+      validateFile(f, true);
       setFile(f);
     } catch (e) {
       setFile(undefined);
@@ -120,14 +131,24 @@ export default function App() {
     setBusy(true);
     setError("");
     try {
-      // Exact silence is checked locally where this browser can decode the format.
-      if (!resultRef.current) {
+      if (excerptMode && !prepared.current) {
+        setStatus("Preparing only the first 3 minutes locally…");
+        const clip = await prepareExcerpt(file, control.signal);
+        control.signal.throwIfAborted();
+        if (id !== runId.current) return;
+        prepared.current = clip;
+      }
+      const upload = prepared.current?.file || file;
+      validateFile(upload);
+      // Avoid expanding a long compressed recording into gigabytes of PCM just
+      // for a silence check. Excerpts and short recordings can be checked locally.
+      if (!resultRef.current && (prepared.current || file.size <= 4 * 1024 * 1024 || (duration > 0 && duration <= 600))) {
         setStatus("Checking the audio…");
         let context: AudioContext | undefined;
         try {
           context = new AudioContext();
           const decoded = await context.decodeAudioData(
-            await file.arrayBuffer(),
+            await upload.arrayBuffer(),
           );
           let peak = 0;
           for (let c = 0; c < decoded.numberOfChannels; c++) {
@@ -147,7 +168,7 @@ export default function App() {
       }
       control.signal.throwIfAborted();
       await runPipeline(
-        file,
+        upload,
         glossary,
         resultRef.current,
         control.signal,
@@ -163,6 +184,9 @@ export default function App() {
             setStatus(m);
           }
         },
+        prepared.current?.excerpt,
+        minutesDetail,
+        reviewMinutes,
       );
       if (id === runId.current) {
         setStatus("Your meeting record is ready.");
@@ -215,12 +239,12 @@ export default function App() {
   function bundle() {
     if (!result) return;
     const files: Record<string, Uint8Array> = {
-      "raw-transcript.txt": strToU8(transcriptText(result.raw)),
+      "raw-transcript.txt": strToU8(transcriptText(result.raw, result.excerpt)),
       "meeting-record.json": strToU8(JSON.stringify(result, null, 2)),
       "meeting-record.md": strToU8(markdown(result)),
     };
     if (result.refined)
-      files["refined-transcript.txt"] = strToU8(transcriptText(result.refined));
+      files["refined-transcript.txt"] = strToU8(transcriptText(result.refined, result.excerpt));
     download("meeting-spitter-results.zip", zipSync(files), "application/zip");
   }
   async function copyMinutes() {
@@ -317,7 +341,7 @@ export default function App() {
                   ? `${(file.size / 1024 / 1024).toFixed(1)} MB${duration ? ` · ${timeLabel(duration)}` : ""} · Click to replace`
                   : "or click to choose an audio file"}
               </span>
-              <small>WAV, MP3, M4A, OGG, WebM, FLAC · up to 24 MB</small>
+              <small>Upload up to 24 MB · larger WAV/MP3: first 3 minutes</small>
             </button>
             {url && (
               <audio
@@ -333,6 +357,23 @@ export default function App() {
                 }
                 aria-label="Meeting recording"
               />
+            )}
+            {file && (
+              <div className="excerpt-choice">
+                <label>
+                  <input type="checkbox" checked={excerptMode}
+                    disabled={busy || !!result || !supportsExcerpt(file)}
+                    onChange={(e) => { setExcerptMode(e.target.checked); prepared.current = undefined; setError(""); }} />
+                  Process only the first 3 minutes
+                </label>
+                <p>{!supportsExcerpt(file)
+                  ? "Excerpt mode supports WAV and MP3. Export a shorter recording for other formats."
+                  : excerptMode
+                    ? "Only 00:00–03:00 (or less for a shorter file) will be uploaded. Later decisions and cancellations are excluded. Results will be labeled as an excerpt."
+                    : file.size > MAX_AUDIO_BYTES
+                      ? "This file exceeds 24 MB. Select the option above to process a short excerpt; the upload limit stays 24 MB."
+                      : "For long recordings, use an excerpt to stay within this demo’s processing limits."}</p>
+              </div>
             )}
             <div className="sample-row">
               <span>Synthetic demo · 1:40</span>
@@ -353,10 +394,40 @@ export default function App() {
               rows={3}
             />
             <div className="start-row">
+              <div className="detail-choice">
+                <label className="field-label" htmlFor="minutes-detail">Minutes detail</label>
+                <select id="minutes-detail" value={minutesDetail} disabled={busy || loadingSample}
+                  onChange={(e) => {
+                    setMinutesDetail(e.target.value as MinutesDetail);
+                    if (resultRef.current?.record || resultRef.current?.draftRecord) {
+                      const preserved = retainTranscripts(resultRef.current);
+                      resultRef.current = preserved; setResult(preserved);
+                      setStatus("Transcripts retained. Update the minutes at your selected detail level.");
+                      setError("");
+                    }
+                  }}>
+                  {Object.entries(MINUTES_DETAILS).map(([value, choice]) => <option key={value} value={value}>{choice.label}</option>)}
+                </select>
+                <p>{MINUTES_DETAILS[minutesDetail].description} Length follows the available discussion; no invented padding.</p>
+                <label className="review-choice">
+                  <input type="checkbox" checked={reviewMinutes} disabled={busy}
+                    onChange={(e) => {
+                      setReviewMinutes(e.target.checked);
+                      if (e.target.checked && resultRef.current?.record && !resultRef.current.correctnessReview) {
+                        const { record, ...prior } = resultRef.current;
+                        const draft = { ...prior, draftRecord: record };
+                        resultRef.current = draft; setResult(draft);
+                        setStatus("Draft retained. Update minutes to run the extra review.");
+                      }
+                    }} />
+                  Extra accuracy review
+                </label>
+                <p>Checks the draft against the transcript for missed or unsupported details. Slower, uses more free quota, and still needs human review.</p>
+              </div>
               <button
                 className="primary"
                 onClick={start}
-                disabled={!file || busy || loadingSample || complete}
+                disabled={!file || busy || loadingSample || complete || (file.size > MAX_AUDIO_BYTES && !excerptMode)}
               >
                 {busy ? (
                   <>
@@ -368,7 +439,7 @@ export default function App() {
                   </>
                 ) : (
                   <>
-                    {result ? "Resume processing" : "Spit the minutes"}{" "}
+                    {result?.refined ? "Update minutes" : result ? "Resume processing" : "Spit the minutes"}{" "}
                     <span>→</span>
                   </>
                 )}
@@ -505,7 +576,7 @@ export default function App() {
                   {tab === "minutes" && result.record && (
                     <>
                       <div className="result-kicker">
-                        THE MEETING, MADE CLEAR
+                        {MINUTES_DETAILS[result.minutesDetail || "standard"].label.toUpperCase()} · {result.correctnessReview ? "TRANSCRIPT REVIEW PASS COMPLETE" : "AI DRAFT"}
                       </div>
                       <h3>{result.record.title}</h3>
                       <ul className="summary-list">
@@ -679,7 +750,7 @@ export default function App() {
                       onClick={() =>
                         download(
                           "raw-transcript.txt",
-                          transcriptText(result.raw),
+                          transcriptText(result.raw, result.excerpt),
                           "text/plain",
                         )
                       }
@@ -691,7 +762,7 @@ export default function App() {
                       onClick={() =>
                         download(
                           "refined-transcript.txt",
-                          transcriptText(result.refined!),
+                          transcriptText(result.refined!, result.excerpt),
                           "text/plain",
                         )
                       }

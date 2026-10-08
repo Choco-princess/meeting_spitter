@@ -5,7 +5,16 @@ export const MODELS = {
   refinement: "openai/gpt-oss-20b",
   record: "openai/gpt-oss-120b",
 } as const;
-export const PROMPT_VERSION = "1.3";
+export const PROMPT_VERSION = "1.9";
+export const FALLBACK_RECORD_MODEL = "qwen/qwen3.8-27b";
+export const MinutesDetailSchema = z.enum(["quick", "standard", "detailed", "full"]);
+export type MinutesDetail = z.infer<typeof MinutesDetailSchema>;
+export const MINUTES_DETAILS: Record<MinutesDetail, { label: string; description: string }> = {
+  quick: { label: "Quick recap", description: "Major topics and outcomes, for a fast read." },
+  standard: { label: "Standard", description: "Key discussion, decisions and next steps." },
+  detailed: { label: "Detailed", description: "Every substantive topic, with useful context and qualifications." },
+  full: { label: "Full notes", description: "Thorough topic notes, including explanations, alternatives and unresolved discussion." },
+};
 export const MAX_AUDIO_BYTES = 24 * 1024 * 1024;
 export const MAX_TRANSCRIPT_CHARS = 14000;
 export const SegmentSchema = z.object({
@@ -73,6 +82,25 @@ export const RecordDraftSchema = RecordSchema.omit({ decisions: true, tasks: tru
     }),
   ),
 });
+// A review changes only fields needing correction; null retains the draft field.
+export const RecordReviewSchema = z.object({
+  title: RecordDraftSchema.shape.title.nullable(),
+  summary: RecordDraftSchema.shape.summary.nullable(),
+  minutes: RecordDraftSchema.shape.minutes.nullable(),
+  decisionCandidates: RecordDraftSchema.shape.decisionCandidates.nullable(),
+  taskCandidates: RecordDraftSchema.shape.taskCandidates.nullable(),
+  openQuestions: RecordDraftSchema.shape.openQuestions.nullable(),
+});
+export function applyRecordReview(candidate: MeetingRecord, review: z.infer<typeof RecordReviewSchema>): MeetingRecord {
+  return finalizeRecord({
+    title: review.title ?? candidate.title,
+    summary: review.summary ?? candidate.summary,
+    minutes: review.minutes ?? candidate.minutes,
+    decisionCandidates: review.decisionCandidates ?? candidate.decisions.map(d => ({ ...d, status: "agreed" as const })),
+    taskCandidates: review.taskCandidates ?? candidate.tasks.map(t => ({ ...t, status: "agreed" as const, ownerAttribution: t.owner ? "named_assignment" as const : "unidentified_speaker" as const })),
+    openQuestions: review.openQuestions ?? candidate.openQuestions,
+  });
+}
 export function finalizeRecord(
   draft: z.infer<typeof RecordDraftSchema>,
 ): MeetingRecord {
@@ -101,17 +129,36 @@ export function finalizeRecord(
     ],
   };
 }
+export interface Excerpt {
+  originalFilename: string;
+  originalBytes: number;
+  startSeconds: number;
+  endSeconds: number;
+  requestedSeconds: number;
+}
+export function excerptNotice(excerpt: Excerpt) {
+  return `Excerpt only: ${timeLabel(excerpt.startSeconds)}–${timeLabel(excerpt.endSeconds)} of the original recording. Later discussion, decisions or cancellations are not included. Review the full meeting before acting on this draft.`;
+}
 export interface Result {
   schemaVersion: "1.0";
   filename: string;
   createdAt: string;
-  models: typeof MODELS;
+  models: { transcription: string; refinement: string; record: string; review?: string };
   promptVersion: string;
   raw: Transcript;
   refined?: Transcript;
   corrections: AppliedCorrection[];
   record?: MeetingRecord;
   warnings: string[];
+  excerpt?: Excerpt;
+  minutesDetail?: MinutesDetail;
+  recordWarnings?: string[];
+  draftRecord?: MeetingRecord;
+  correctnessReview?: boolean;
+}
+export function retainTranscripts(result: Result): Result {
+  const { record: _, draftRecord: __, correctnessReview: ___, recordWarnings, ...rest } = result;
+  return { ...rest, warnings: result.warnings.filter(w => !recordWarnings?.includes(w)) };
 }
 
 export function applyCorrections(
@@ -178,9 +225,14 @@ export function cleanReferences(record: MeetingRecord, segments: Segment[]) {
       removed = true;
       return false;
     });
+  const narrative = (text: string) => text.replace(/\s*\((s\d+(?:\s*,\s*s\d+)*)\)/g, (match, refs: string) => refs.split(/\s*,\s*/).every(id => ids.has(id)) ? "" : match);
   return {
     record: {
       ...record,
+      title: narrative(record.title),
+      summary: record.summary.map(narrative),
+      minutes: record.minutes.map(m => ({ topic: narrative(m.topic), points: m.points.map(narrative) })),
+      openQuestions: record.openQuestions.map(narrative),
       decisions: record.decisions.map((d) => ({
         ...d,
         sourceIds: clean(d.sourceIds),
@@ -206,10 +258,11 @@ export function timeLabel(seconds: number) {
     .toString()
     .padStart(2, "0")}:${(s % 60).toString().padStart(2, "0")}`;
 }
-export function transcriptText(t: Transcript) {
-  return t.segments
+export function transcriptText(t: Transcript, excerpt?: Excerpt) {
+  const text = t.segments
     .map((s) => `[${timeLabel(s.start)}] ${s.text}`)
     .join("\n\n");
+  return excerpt ? `${excerptNotice(excerpt)}\n\n${text}` : text;
 }
 export function markdown(result: Result): string {
   const r = result.record;
@@ -218,10 +271,13 @@ export function markdown(result: Result): string {
     "",
     `Source: ${result.filename}`,
     `Generated: ${result.createdAt}`,
+    `Minutes detail: ${MINUTES_DETAILS[result.minutesDetail || "standard"].label}`,
+    `Transcript review pass: ${result.correctnessReview ? "Completed (still an AI draft)" : "Not used"}`,
     "",
     "> AI-generated draft. Review important details against the recording.",
     "",
   ];
+  if (result.excerpt) lines.push(`> ${excerptNotice(result.excerpt)}`, "");
   if (!r)
     lines.push(
       "Processing is incomplete. Available transcripts are included in the other downloads.",

@@ -41,6 +41,45 @@ afterEach(() => {
   vi.useRealTimers();
 });
 describe("pipeline resilience", () => {
+  it("preserves the draft on review failure and retries only the review", async () => {
+    const fetcher = vi.fn()
+      .mockResolvedValueOnce(respond(raw))
+      .mockResolvedValueOnce(respond({ corrections: [] }))
+      .mockResolvedValueOnce(respond({ record, warnings: [] }))
+      .mockResolvedValueOnce(respond({ error: "Review unavailable" }, 400));
+    vi.stubGlobal("fetch", fetcher);
+    let saved: Result | undefined;
+    await expect(runPipeline(file, "", undefined, new AbortController().signal, r => { saved = r; }, () => {}, undefined, "detailed", true)).rejects.toThrow("Review unavailable");
+    expect(saved?.draftRecord).toEqual(record);
+    expect(saved?.record).toBeUndefined();
+    fetcher.mockClear().mockResolvedValueOnce(respond({ record, warnings: [] }));
+    const done = await runPipeline(file, "", saved, new AbortController().signal, () => {}, () => {}, undefined, "detailed", true);
+    expect(done.correctnessReview).toBe(true);
+    expect(done.record).toEqual(record);
+    expect(fetcher).toHaveBeenCalledTimes(1);
+    expect(fetcher.mock.calls[0][0]).toContain("/api/review");
+  });
+  it("regenerates a different detail level without repeating completed transcript stages", async () => {
+    const prior: Result = { schemaVersion: "1.0", filename: file.name, createdAt: "test", models: MODELS, promptVersion: PROMPT_VERSION, raw, refined: raw, corrections: [], record, minutesDetail: "quick", recordWarnings: ["Old draft warning"], warnings: ["Keep raw warning", "Old draft warning"] };
+    const fetcher = vi.fn().mockResolvedValueOnce(respond({ record, warnings: [] }));
+    vi.stubGlobal("fetch", fetcher);
+    const done = await runPipeline(file, "", prior, new AbortController().signal, () => {}, () => {}, undefined, "full");
+    expect(fetcher).toHaveBeenCalledTimes(1);
+    expect(JSON.parse(fetcher.mock.calls[0][1].body).detail).toBe("full");
+    expect(done.raw).toBe(raw); expect(done.refined).toBe(raw);
+    expect(done.minutesDetail).toBe("full");
+    expect(done.warnings).toEqual(["Keep raw warning"]);
+  });
+  it("does not mark an unreviewed candidate as a completed record after cancellation", async () => {
+    const control = new AbortController();
+    let resolve!: (r: Response) => void;
+    const prior: Result = { schemaVersion: "1.0", filename: file.name, createdAt: "test", models: MODELS, promptVersion: PROMPT_VERSION, raw, refined: raw, corrections: [], draftRecord: record, minutesDetail: "detailed", warnings: [] };
+    vi.stubGlobal("fetch", vi.fn(() => new Promise(r => { resolve = r; })));
+    const update = vi.fn();
+    const pending = runPipeline(file, "", prior, control.signal, update, () => {}, undefined, "detailed", true);
+    control.abort(); resolve(respond({ record, warnings: [] }));
+    await expect(pending).rejects.toThrow(); expect(update).not.toHaveBeenCalled();
+  });
   it("runs all three stages in order and preserves the raw transcript", async () => {
     const fetcher = vi
       .fn()

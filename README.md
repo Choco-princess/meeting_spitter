@@ -8,9 +8,11 @@ A meeting assistant that turns English audio into a raw transcript, a refined tr
 
 1. Upload audio or choose **Try a sample meeting**. The bundled sample is clearly synthetic, generated with Windows speech synthesis from an original fictional meeting script.
 2. Optionally enter spellings of names and technical terms.
-3. Select **Spit the minutes**. All three stages run in order.
-4. Inspect minutes, decisions/tasks and both transcripts. Source timestamps play the corresponding audio.
-5. Copy the minutes or download the result ZIP, individual transcripts, Markdown minutes or structured JSON.
+3. For a long WAV/MP3, optionally select **Process only the first 3 minutes**. It trims locally and uploads a small mono WAV, with explicit excerpt notices. Larger originals never bypass the 24 MiB upload cap.
+4. Choose **Quick recap**, **Standard**, **Detailed** (default), or **Full notes**. Extra accuracy review is enabled by default; it checks the draft against the transcript and uses more free quota.
+5. Select **Spit the minutes**. All three stages run in order, including the optional corrective pass in the minutes stage.
+6. Inspect minutes, decisions/tasks and both transcripts. Source timestamps play the corresponding original audio. Change the detail level and select **Update minutes** to reuse the existing transcripts.
+7. Copy the minutes or download ZIP, TXT, Markdown or JSON. Excerpt scope is included in every export.
 
 Judges do not need an API key. The shared Groq key is stored as a Cloudflare Worker secret, never in the frontend. The developer's laptop does not need to be running.
 
@@ -20,11 +22,11 @@ Judges do not need an API key. The shared Groq key is stored as a Cloudflare Wor
 |---|---|---|
 | Speech recognition | `whisper-large-v3` | English transcript with segment timestamps |
 | Terminology refinement | `openai/gpt-oss-20b` | Narrow, contextual correction proposals applied to original segments |
-| Meeting documentation | `openai/gpt-oss-120b` | Summary, topic-organized minutes, decisions, tasks and unresolved questions |
+| Meeting documentation | `openai/gpt-oss-120b`; free fallback `qwen/qwen3.8-27b` | Summary, topic-organized minutes, decisions, tasks and unresolved questions |
 
 The two language models are separate processing stages. Results are generated from the uploaded audio; the app does not return canned sample outputs. Groq's free plan and Cloudflare Workers Free are used. Shared quotas can cause delays or temporary unavailability; the app never switches to paid inference.
 
-The browser orchestrates three API requests to a small Cloudflare Worker. The Worker fixes the model IDs and prompts, holds the credential, and validates requests. JSON Schema constrains the language-model output shape. This does **not** guarantee factual accuracy. Prompts live in `worker/prompts.ts`; schemas and correction/export logic live in `shared/schema.ts`.
+The browser orchestrates three API requests, plus an optional fourth corrective-review request, to a small Cloudflare Worker. The Worker fixes the model IDs and prompts, holds the credential, and validates requests. JSON Schema constrains the language-model output shape. This does **not** guarantee factual accuracy. Prompts live in `worker/prompts.ts`; schemas and correction/export logic live in `shared/schema.ts`.
 
 ## Accuracy and limitations
 
@@ -33,6 +35,9 @@ The browser orchestrates three API requests to a small Cloudflare Worker. The Wo
 - Prompts classify proposed versus established tasks and distinguish unresolved proposals from decisions. Named ownership is retained from explicit assignments or later recaps; nearby names do not identify unlabeled speakers. Supporting references aid review, not proof.
 - This is an AI-generated draft: unclear speech, speaker identity, names and contextual meaning can still be wrong. Review important details against the audio.
 - English audio: WAV, MP3, M4A, OGG, WebM, FLAC, up to **24 MiB**. Current whole-transcript processing limit is **14,000 characters**; longer transcripts are explicitly rejected after transcription, which remains downloadable. File size alone does not indicate meeting length.
+- First-three-minutes mode reads a bounded prefix from standard PCM/float WAV or MPEG Layer III MP3 (CBR/VBR, ID3), then resamples it locally to mono 16 kHz. Original recordings stay unchanged. Unfinalized WAV headers and cut MP3 frames are rejected. Other oversized formats, unusual WAV encodings and extreme multichannel/sample-rate recordings require a shorter export.
+- Detail levels change coverage, without forcing word counts or invented padding. The corrective pass keeps sound draft sections and changes only fields needing repair. It can still miss errors.
+- If the primary minutes model has exhausted its free daily quota, a distinct free Qwen model is used. Actual generation/review model IDs and a fallback notice are included in the results. There is no paid fallback.
 - There is no speaker diarization. Named attribution depends on what was actually stated and recognized.
 - Relative dates are kept verbatim, not resolved against the upload date.
 - Cancel/retry preserves completed stages in the open page. Reloading loses the current in-memory run. A provider request already accepted may finish after cancellation.

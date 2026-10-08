@@ -973,3 +973,13 @@ textarea::placeholder {
     transition: none !important;
   }
 }
+.excerpt-choice { margin: 14px 0; padding: 14px; border: 1px solid #d7d9c8; border-radius: 10px; background: #f7f7ee; }
+.excerpt-choice label { display: flex; align-items: center; gap: 10px; font-weight: 600; font-size: 13px; }
+.excerpt-choice input { width: 17px; height: 17px; flex-shrink: 0; accent-color: #31583d; }
+.excerpt-choice p { font-size: 12px; line-height: 1.6; margin: 8px 0 0; color: #596154; }
+.detail-choice { width: 100%; }
+.detail-choice select { width: 100%; padding: 11px 12px; border: 1px solid #d7d9c8; border-radius: 8px; background: #fff; color: #26352e; font: inherit; font-size: 13px; }
+.detail-choice p { font-size: 12px; line-height: 1.6; color: #596154; margin: 8px 0 14px; }
+.start-row { flex-wrap: wrap; }
+.review-choice { display: flex; align-items: center; gap: 10px; font-size: 13px; font-weight: 600; }
+.review-choice input { width: 17px; height: 17px; accent-color: #31583d; }
