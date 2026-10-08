@@ -1,0 +1,75 @@
+[00:00]  and the CRI, Container Runtime Interface,
+
+[00:05]  API between the Kubelet and the container runtime plugins themselves,
+
+[00:12]  and also DNS probably needs to be addressed.
+
+[00:15]  So I added a note or two about that.
+
+[00:18]  Does anybody else have any general comments at the start,
+
+[00:22]  or should we just kind of jump into what people think about various documents?
+
+[00:25]  I don't know anybody have comments
+
+[00:30]  that's a silly question well I hope people have comments otherwise we can just end this meeting
+
+[00:38]  quick okay Tim you touched it so now you speak all right so I did go through all of the docs
+
+[00:48]  probably not with as fine tooth or comb as I would have liked but I did go through them
+
+[00:52]  and they are all basically describing the same thing,
+
+[00:56]  which is exactly what I expected when I,
+
+[00:59]  we said we need to explore this in the last call.
+
+[01:01]  I don't think any of them touch on all of the things that they would need to
+
+[01:05]  address in order to make this work.
+
+[01:07]  But it is exactly what I feared it would be,
+
+[01:10]  which is an enormous amount of complexity that we add effectively to every
+
+[01:15]  resource involved in anything related to workload or network, right?
+
+[01:20]  We touch pods, service, endpoints,
+
+[01:23]  we're gonna have to deal with ingress,
+
+[01:24]  we gonna have to deal with DNS we gonna have to deal with network policy This sort of flies counter to the direction that things are headed with things like Istio and Service Mesh Node ports and host ports
+
+[01:38]  I'm completely unclear how those things could possibly work in this world. I don't actually
+
+[01:43]  even know how I would try to implement this on a platform like GCP. So I have a lot of questions.
+
+[01:50]  I just ran through a lot of things, but I can run through them a little bit more slowly.
+
+[01:55]  But the biggest number one concern is like am I the only one who's concerned about the amount of complexity here?
+
+[02:07]  I mean
+
+[02:08]  Go ahead Casey. Now. I was just agreeing. My main concern is the number of things this touches and
+
+[02:15]  the kind of complexity we're adding for a
+
+[02:18]  Lot of users who might not want this feature
+
+[02:20]  chair? Yeah, I mean, I am also somewhat concerned about the complexity. But at the same time,
+
+[02:30]  I see a lot of complexity being added to other parts of cube to address certain use cases. And
+
+[02:36]  there has been a ton of interest from various point or parts of the community around this kind
+
+[02:42]  of thing. And we've been talking about it for 18 months. And so, you know, if we don't,
+
+[02:48]  I'm not saying that this proposal is, you know,
+
+[02:52]  obviously the be all end all of proposals.
+
+[02:54]  I'm just trying to think of, you know,
+
+[02:55]  what a forward path would be.
+
+[02:57]  And if that forward path is not, you know,

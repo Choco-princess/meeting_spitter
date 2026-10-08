@@ -2,6 +2,8 @@
 
 Date: 8 October 2026 (IST). Scope: initial hackathon submission.
 
+Latest checkpoint: v0.3, prompt 1.3. The repaired public API, seven separate live stage checks and a randomly selected real YouTube browser holdout completed. Detailed results and remaining omissions are in `REAL_TESTS.md`; saved outputs and screenshots are included. Earlier video/checks below remain the baseline history, with their matching sample outputs retained.
+
 ## Completed checks
 
 - TypeScript typecheck and Vite production build: passed.

@@ -31,3 +31,13 @@ The tests demonstrate a functioning, useful draft workflow, not zero hallucinati
 `npx tsx scripts/evaluate-stages.ts` runs live refinement plus six documentation cases. All seven passed at the checkpoint; inputs, outputs and pass criteria are saved in `stage-evaluation.json`. This includes proposal-only, cancellation, unassigned work, question versus task, nearby name versus owner, and a later recap naming owners.
 
 See `TEST_PLAN.md` for deterministic, browser and hidden-test coverage. The two hidden-pool clips were downloaded before checkpoint selection and were not transcribed or inspected during prompt tuning.
+
+## Frozen hidden test
+
+Checkpoint `cbeca3671353d6231443cbd062d2db513ed1d6b6` (`v0.3-checkpoint`), Worker version `9068ca62-fbc0-4d0d-a0a5-407756a8b097`, prompt 1.3. A cryptographically random selection from the two successfully downloaded clips chose [Kubernetes SIG Network](https://www.youtube.com/watch?v=ZwjzsdxPpvY), minutes 2–5. No redraw or prompt change was made for this test.
+
+The production browser processed the actual MP3 with no glossary: 38 raw segments, unchanged refinement, complete minutes/open questions, no confirmed decisions or tasks. Review against the raw transcript found no newly invented commitments in this excerpt. This validates postprocessing of the recognized text, not independent word-recognition accuracy.
+
+ZIP and all four individual downloads matched byte for byte. Timestamp playback sought to 38.7 seconds and played; it was paused after testing. At a 390px viewport, content width equaled client width (375px excluding the scrollbar), with no horizontal overflow. No browser console errors were captured. The copy-minutes button displayed success; the automation tool's virtual clipboard could not independently read back/paste the native clipboard, so that aspect is recorded as a verification limitation.
+
+Selection, outputs and detailed browser checks are under `real-evaluation/`. `checkpoint-result.png` shows completed stages on the public site. The unused SIG Apps clip remains downloaded locally for a later fresh holdout. No additional model calls or prompt tuning were made on the chosen hidden clip.

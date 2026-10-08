@@ -1,0 +1,28 @@
+{
+  "selected": {
+    "id": "sig-network",
+    "url": "https://www.youtube.com/watch?v=ZwjzsdxPpvY",
+    "start": 120,
+    "end": 300
+  },
+  "pool": [
+    {
+      "id": "sig-apps",
+      "url": "https://www.youtube.com/watch?v=hn23Z-vL_cM",
+      "start": 120,
+      "end": 300
+    },
+    {
+      "id": "sig-network",
+      "url": "https://www.youtube.com/watch?v=ZwjzsdxPpvY",
+      "start": 120,
+      "end": 300
+    }
+  ],
+  "checkpoint": "cbeca3671353d6231443cbd062d2db513ed1d6b6",
+  "workerVersion": "9068ca62-fbc0-4d0d-a0a5-407756a8b097",
+  "promptVersion": "1.3",
+  "selectedAt": "2026-10-08T16:22:31.958752+00:00",
+  "audioSha256": "b7d734f479095feac538e6ce7ca3aa7b36a88a63fa02d32624d1a58f1a045e1f",
+  "selectionMethod": "secrets.choice over two successfully pre-downloaded clips; no redraw"
+}
