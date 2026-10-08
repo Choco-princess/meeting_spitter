@@ -88,6 +88,11 @@ describe("faithful results", () => {
       "Use Kubernetes, not Docker. Time-out is 30 seconds.",
     );
   });
+  it("does not count unchanged wording as an applied correction", () => {
+    const r = applyCorrections(raw, [{ segmentId: "s1", original: "Timeout", replacement: "Timeout", reason: "No change" }]);
+    expect(r.corrections[0].applied).toBe(false);
+    expect(r.transcript.text).toBe(raw.text);
+  });
   it("removes invalid references but preserves useful content", () => {
     const r = cleanReferences(record, raw.segments);
     expect(r.record.decisions[0].sourceIds).toEqual(["s1"]);

@@ -159,9 +159,13 @@ describe("pipeline resilience", () => {
     );
   });
   it("keeps unresolved candidates available without calling them confirmed", () => {
-    const { decisions: _, ...base } = record;
+    const { decisions: _, tasks, ...base } = record;
     const r = finalizeRecord({
       ...base,
+      taskCandidates: [
+        { ...tasks[0], status: "agreed" },
+        { description: "Investigate tool licensing", owner: null, deadline: null, sourceIds: ["s2"], status: "proposed" },
+      ],
       decisionCandidates: [
         { status: "agreed", text: "Keep pilot internal", sourceIds: ["s1"] },
         {
@@ -173,6 +177,8 @@ describe("pipeline resilience", () => {
     });
     expect(r.decisions).toHaveLength(1);
     expect(r.openQuestions).toContain("Vendor migration remains a proposal");
+    expect(r.tasks).toEqual(tasks);
+    expect(r.openQuestions).toContain("Proposed work (not agreed): Investigate tool licensing");
   });
   it("returns a complete cached result without spending another request", async () => {
     const fetcher = vi.fn();

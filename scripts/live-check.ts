@@ -15,14 +15,25 @@ const base =
   process.env.API_BASE ||
   "https://meeting-spitter-api.pages.dev";
 async function post(path: string, body: FormData | object) {
+  for (let attempt = 0; attempt < 3; attempt++) {
   const r = await fetch(`${base}/api/${path}`, {
     method: "POST",
     headers: body instanceof FormData ? {} : { "Content-Type": "application/json" },
     body: body instanceof FormData ? body : JSON.stringify(body),
   });
   const d = await r.json();
+  if (r.status === 429 && attempt < 2 && !/daily/i.test(d.error || "")) {
+    const delay = Number(r.headers.get("Retry-After") || 60);
+    if (Number.isFinite(delay) && delay > 0 && delay <= 120) {
+      console.log(`${path}: shared quota busy; retrying in ${Math.ceil(delay)}s`);
+      await new Promise(resolve => setTimeout(resolve, delay * 1000));
+      continue;
+    }
+  }
   if (!r.ok) throw new Error(`${path}: ${r.status} ${JSON.stringify(d)}`);
   return d;
+  }
+  throw new Error(`${path}: retry limit reached`);
 }
 const inputPath = process.argv[2] || "samples/planning-meeting.wav";
 const outputDir = process.argv[3] || "samples";

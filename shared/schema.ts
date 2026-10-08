@@ -5,7 +5,7 @@ export const MODELS = {
   refinement: "openai/gpt-oss-20b",
   record: "openai/gpt-oss-120b",
 } as const;
-export const PROMPT_VERSION = "1.1";
+export const PROMPT_VERSION = "1.2";
 export const MAX_AUDIO_BYTES = 24 * 1024 * 1024;
 export const MAX_TRANSCRIPT_CHARS = 14000;
 export const SegmentSchema = z.object({
@@ -57,7 +57,7 @@ export const RecordSchema = z.object({
 });
 export type MeetingRecord = z.infer<typeof RecordSchema>;
 // Explicit classification keeps unresolved proposals out of confirmed decisions.
-export const RecordDraftSchema = RecordSchema.omit({ decisions: true }).extend({
+export const RecordDraftSchema = RecordSchema.omit({ decisions: true, tasks: true }).extend({
   decisionCandidates: z.array(
     z.object({
       status: z.enum(["agreed", "unresolved"]),
@@ -65,22 +65,31 @@ export const RecordDraftSchema = RecordSchema.omit({ decisions: true }).extend({
       sourceIds: z.array(z.string()),
     }),
   ),
+  taskCandidates: z.array(
+    RecordSchema.shape.tasks.element.extend({ status: z.enum(["agreed", "proposed"]) }),
+  ),
 });
 export function finalizeRecord(
   draft: z.infer<typeof RecordDraftSchema>,
 ): MeetingRecord {
-  const { decisionCandidates, ...record } = draft;
+  const { decisionCandidates, taskCandidates, ...record } = draft;
   return {
     ...record,
     decisions: decisionCandidates
       .filter((d) => d.status === "agreed")
       .map(({ status: _, ...d }) => d),
+    tasks: taskCandidates
+      .filter((t) => t.status === "agreed")
+      .map(({ status: _, ...t }) => t),
     openQuestions: [
       ...new Set([
         ...record.openQuestions,
         ...decisionCandidates
           .filter((d) => d.status === "unresolved")
           .map((d) => d.text),
+        ...taskCandidates
+          .filter((t) => t.status === "proposed")
+          .map((t) => `Proposed work (not agreed): ${t.description}`),
       ]),
     ],
   };
@@ -113,7 +122,9 @@ export function applyCorrections(
     const segment = raw.segments.find((s) => s.id === c.segmentId);
     const start = segment?.text.indexOf(c.original) ?? -1;
     let note = "";
-    if (!c.original.trim() || !c.replacement.trim() || !segment || start < 0)
+    if (c.original === c.replacement)
+      note = "No change was proposed.";
+    else if (!c.original.trim() || !c.replacement.trim() || !segment || start < 0)
       note = "Original wording could not be located.";
     else if (segment.text.indexOf(c.original, start + 1) !== -1)
       note = "Original wording occurs more than once; left unchanged.";
