@@ -13,6 +13,8 @@ Date: 8 October 2026 (IST). Scope: initial hackathon submission.
 - Browser empty file, unsupported extension and silent WAV: clear errors before sending audio upstream.
 - Deployed corrupt-WAV request: HTTP 422 with a readable explanation.
 - GitHub Actions: baseline test/build/Pages deployment completed successfully; public app returned HTTP 200.
+- Final production-site browser run (prompt version 1.1): passed all three stages and every download, with zero uncaught page errors. Database migration stayed out of confirmed decisions; the three expected tasks and nullable fields were retained. Its captured video and actual exports are included.
+- A second, freshly generated synthetic design-retrospective recording passed the complete CLI pipeline without a glossary. Both confirmed decisions and tasks were correctly empty. It was not supplied as text to the transcription stage.
 
 ## Live language-model regression cases
 
@@ -24,7 +26,7 @@ Full inputs and outputs are in `live-evaluation.json` (these are real API respon
 | Task explicitly cancelled later | No surviving task | Passed |
 | Agreed work with no owner or deadline | Task retained, both fields null | Passed |
 
-The synthetic audio includes 30 versus 13 seconds, a $500 budget, a postponed public launch, a cancelled announcement, assigned and unassigned work, and a database proposal. The first live run retained the proposal in the decisions section while wording it as not agreed. Prompt/schema version 1.1 adds agreed/unresolved classification to separate those categories. This is a targeted usability correction, not a guarantee of factual accuracy.
+The synthetic audio includes 30 versus 13 seconds, a $500 budget, a postponed public launch, a cancelled announcement, assigned and unassigned work, and a database proposal. The first live run retained the proposal in the decisions section while wording it as not agreed. Prompt/schema version 1.1 adds agreed/unresolved classification; the final production run put the migration proposal under open questions and retained the expected assignments. This is a targeted usability correction, not a guarantee of factual accuracy. Agreed assignments can appear in both decisions and tasks.
 
 ## Practical limits
 

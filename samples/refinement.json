@@ -1,7 +1,6 @@
 {
   "transcript": {
     "text": " Maya, let us start our engineering planning meeting.  The API pilot is working, but we have not approved a public launch.  We agree to keep the pilot internal until the security review is complete.  Leo, I will update the Kubernetes deployment guide by Friday.  Maya, thank you, Leo.  Priya, can you review the retry logic?  Yes, I will review it.  We also need to document the error messages.  No one has been assigned to that yet.  Maybe we should migrate the database to PostgreSQL next month.  Let us investigate first.  We have not decided to migrate.  Agreed.  Our current timeout stays at 30 seconds, not 13.  The budget remains $500.  We initially said that I would send the announcement tomorrow, but cancel that task.  There will be no announcement until the security review.  Priya, the p95 latency is 200 milliseconds.  We should keep watching it.  Maya, to recap, the pilot stays internal.  Leo owns the deployment guide due Friday.  Priya will review retry logic without a fixed deadline.  Documenting error messages is needed but unassigned.  The migration is only a proposal.  Thank you everyone.",
-    "duration": 100.180123648,
     "segments": [
       {
         "id": "s1",
@@ -154,6 +153,7 @@
         "text": " Thank you everyone."
       }
     ],
+    "duration": 100.180123648,
     "warnings": []
   },
   "corrections": [
@@ -168,7 +168,7 @@
       "segmentId": "s18",
       "original": "Pre-ya",
       "replacement": "Priya",
-      "reason": "Speaker name typo",
+      "reason": "Speaker name misspelled",
       "applied": true
     },
     {
@@ -182,7 +182,7 @@
       "segmentId": "s20",
       "original": "Mya",
       "replacement": "Maya",
-      "reason": "Speaker name typo",
+      "reason": "Speaker name misspelled",
       "applied": true
     }
   ]

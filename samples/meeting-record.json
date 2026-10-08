@@ -1,13 +1,13 @@
 {
   "schemaVersion": "1.0",
   "filename": "sample-meeting.wav",
-  "createdAt": "2026-10-08T12:36:34.942Z",
+  "createdAt": "2026-10-08T12:48:27.506Z",
   "models": {
     "transcription": "whisper-large-v3",
     "refinement": "openai/gpt-oss-20b",
     "record": "openai/gpt-oss-120b"
   },
-  "promptVersion": "1.0",
+  "promptVersion": "1.1",
   "raw": {
     "text": " Maya, let us start our engineering planning meeting. The API pilot is working, but we have not approved a public launch. We agree to keep the pilot internal until the security review is complete. Leo, I will update the Kubernetes deployment guide by Friday. Maya, thank you, Leo. Priya, can you review the retry logic? Yes, I will review it. We also need to document the error messages. No one has been assigned to that yet. Maybe we should migrate the database to Postgres next month. Let us investigate first. We have not decided to migrate. Agreed. Our current timeout stays at 30 seconds, not 13. The budget remains $500. We initially said that I would send the announcement tomorrow, but cancel that task. There will be no announcement until the security review. Pre-ya, the P-95 latency is 200 milliseconds. We should keep watching it. Mya, to recap, the pilot stays internal. Leo owns the deployment guide due Friday. Priya will review retry logic without a fixed deadline. Documenting error messages is needed but unassigned. The migration is only a proposal. Thank you everyone.",
     "segments": [
@@ -184,7 +184,7 @@
       "segmentId": "s18",
       "original": "P-95",
       "replacement": "p95",
-      "reason": "Standardized latency notation per glossary",
+      "reason": "Standardized latency metric notation per glossary",
       "applied": true
     },
     {
@@ -354,61 +354,57 @@
     "warnings": []
   },
   "record": {
-    "title": "Engineering Planning Meeting – Pilot, Deployment Guide, and Review Items",
+    "title": "Engineering Planning Meeting Summary",
     "summary": [
       "Pilot remains internal pending security review.",
       "Leo will update the Kubernetes deployment guide by Friday.",
-      "Priya will review retry logic; documentation of error messages is needed but unassigned.",
-      "Timeout stays at 30 seconds and budget remains $500.",
-      "Announcement cancelled until security review is completed.",
-      "Database migration to PostgreSQL is only a proposal; investigation required."
+      "Priya will review the retry logic.",
+      "Error‑message documentation is needed but unassigned.",
+      "Timeout stays at 30 seconds and budget remains $500.",
+      "Announcement cancelled until the security review."
     ],
     "minutes": [
       {
-        "topic": "Pilot Status",
+        "topic": "API Pilot Status",
         "points": [
           "The API pilot is working but not approved for public launch.",
-          "Agreement to keep the pilot internal until the security review is complete."
+          "The team agreed to keep the pilot internal until the security review is complete."
         ]
       },
       {
-        "topic": "Deployment Guide Update",
+        "topic": "Documentation Updates",
         "points": [
-          "Leo will update the Kubernetes deployment guide by Friday."
-        ]
-      },
-      {
-        "topic": "Code Review and Documentation",
-        "points": [
-          "Priya will review the retry logic.",
-          "Need to document error messages; no one assigned yet."
-        ]
-      },
-      {
-        "topic": "Database Migration Proposal",
-        "points": [
-          "Suggestion to migrate the database to PostgreSQL next month.",
-          "Decision to investigate first; migration not decided."
+          "Leo will update the Kubernetes deployment guide by Friday.",
+          "Priya will review the retry logic (no fixed deadline).",
+          "The error‑message documentation is required but currently has no owner."
         ]
       },
       {
         "topic": "Configuration and Budget",
         "points": [
-          "Timeout remains at 30 seconds, not 13 seconds.",
-          "Budget remains $500."
+          "Current timeout remains at 30 seconds (not 13).",
+          "The budget remains $500."
         ]
       },
       {
-        "topic": "Announcement",
+        "topic": "Announcements",
         "points": [
-          "Initial plan to send announcement tomorrow was cancelled.",
-          "No announcement will be made until the security review."
+          "The previously planned announcement for tomorrow is cancelled.",
+          "No announcement will be made until the security review is completed."
         ]
       },
       {
-        "topic": "Performance Monitoring",
+        "topic": "Database Migration Proposal",
         "points": [
-          "Priya reports p95 latency is 200 ms; continue monitoring."
+          "A suggestion to migrate the database to PostgreSQL next month was raised.",
+          "The team decided to investigate first and has not made a decision to migrate."
+        ]
+      },
+      {
+        "topic": "Latency Monitoring",
+        "points": [
+          "Priya reported p95 latency is 200 ms.",
+          "The team will continue to monitor the latency."
         ]
       }
     ],
@@ -421,30 +417,37 @@
         ]
       },
       {
-        "text": "Maintain current timeout at 30 seconds.",
+        "text": "Leo will update the Kubernetes deployment guide by Friday.",
+        "sourceIds": [
+          "s4",
+          "s21"
+        ]
+      },
+      {
+        "text": "Priya will review the retry logic.",
+        "sourceIds": [
+          "s6",
+          "s7",
+          "s22"
+        ]
+      },
+      {
+        "text": "Maintain the current timeout at 30 seconds.",
         "sourceIds": [
           "s14"
         ]
       },
       {
-        "text": "Budget remains $500.",
+        "text": "The budget remains $500.",
         "sourceIds": [
           "s15"
         ]
       },
       {
-        "text": "Cancel the announcement; no announcement until the security review.",
+        "text": "Cancel the announcement; no announcement will be made until the security review.",
         "sourceIds": [
           "s16",
           "s17"
-        ]
-      },
-      {
-        "text": "Database migration to PostgreSQL is only a proposal; not decided.",
-        "sourceIds": [
-          "s10",
-          "s12",
-          "s24"
         ]
       }
     ],
@@ -454,18 +457,15 @@
         "owner": "Leo",
         "deadline": "Friday",
         "sourceIds": [
-          "s4",
-          "s21"
+          "s4"
         ]
       },
       {
-        "description": "Review retry logic",
+        "description": "Review the retry logic",
         "owner": "Priya",
         "deadline": null,
         "sourceIds": [
-          "s6",
-          "s7",
-          "s22"
+          "s6"
         ]
       },
       {
@@ -473,14 +473,12 @@
         "owner": null,
         "deadline": null,
         "sourceIds": [
-          "s8",
-          "s9",
-          "s23"
+          "s8"
         ]
       }
     ],
     "openQuestions": [
-      "How should the investigation of the PostgreSQL migration be conducted and who will lead it?"
+      "Migrate the database to PostgreSQL next month."
     ]
   }
 }

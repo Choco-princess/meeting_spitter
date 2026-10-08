@@ -89,6 +89,6 @@ The deterministic tests exercise patch safety, reference cleanup, export consist
 - `samples/meeting-record.json`, Markdown and both transcripts: actual pipeline outputs.
 - `docs/TECHNICAL.md`: design and model roles.
 - `docs/VALIDATION.md`: completed checks and known limits.
-- `docs/demo.webm`: recorded end-to-end run, once captured.
+- `docs/demo.webm`: recorded end-to-end run on the public site, with matching exports in `samples/`.
 
 The unrelated ArUco/QR text in the supplied brief is treated as an editing artifact; this project implements the meeting-assistant requirements.

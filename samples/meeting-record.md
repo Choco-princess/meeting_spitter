@@ -1,7 +1,7 @@
-# Engineering Planning Meeting – Pilot, Deployment Guide, and Review Items
+# Engineering Planning Meeting Summary
 
 Source: sample-meeting.wav
-Generated: 2026-10-08T12:36:34.942Z
+Generated: 2026-10-08T12:48:27.506Z
 
 > AI-generated draft. Review important details against the recording.
 
@@ -9,78 +9,77 @@ Generated: 2026-10-08T12:36:34.942Z
 
 - Pilot remains internal pending security review.
 - Leo will update the Kubernetes deployment guide by Friday.
-- Priya will review retry logic; documentation of error messages is needed but unassigned.
-- Timeout stays at 30 seconds and budget remains $500.
-- Announcement cancelled until security review is completed.
-- Database migration to PostgreSQL is only a proposal; investigation required.
+- Priya will review the retry logic.
+- Error‑message documentation is needed but unassigned.
+- Timeout stays at 30 seconds and budget remains $500.
+- Announcement cancelled until the security review.
 
 ## Minutes
 
-### Pilot Status
+### API Pilot Status
 
 - The API pilot is working but not approved for public launch.
-- Agreement to keep the pilot internal until the security review is complete.
+- The team agreed to keep the pilot internal until the security review is complete.
 
-### Deployment Guide Update
+### Documentation Updates
 
 - Leo will update the Kubernetes deployment guide by Friday.
-
-### Code Review and Documentation
-
-- Priya will review the retry logic.
-- Need to document error messages; no one assigned yet.
-
-### Database Migration Proposal
-
-- Suggestion to migrate the database to PostgreSQL next month.
-- Decision to investigate first; migration not decided.
+- Priya will review the retry logic (no fixed deadline).
+- The error‑message documentation is required but currently has no owner.
 
 ### Configuration and Budget
 
-- Timeout remains at 30 seconds, not 13 seconds.
-- Budget remains $500.
+- Current timeout remains at 30 seconds (not 13).
+- The budget remains $500.
 
-### Announcement
+### Announcements
 
-- Initial plan to send announcement tomorrow was cancelled.
-- No announcement will be made until the security review.
+- The previously planned announcement for tomorrow is cancelled.
+- No announcement will be made until the security review is completed.
 
-### Performance Monitoring
+### Database Migration Proposal
 
-- Priya reports p95 latency is 200 ms; continue monitoring.
+- A suggestion to migrate the database to PostgreSQL next month was raised.
+- The team decided to investigate first and has not made a decision to migrate.
+
+### Latency Monitoring
+
+- Priya reported p95 latency is 200 ms.
+- The team will continue to monitor the latency.
 
 ## Decisions
 
 - Keep the API pilot internal until the security review is complete. (Sources: s3, s20)
-- Maintain current timeout at 30 seconds. (Sources: s14)
-- Budget remains $500. (Sources: s15)
-- Cancel the announcement; no announcement until the security review. (Sources: s16, s17)
-- Database migration to PostgreSQL is only a proposal; not decided. (Sources: s10, s12, s24)
+- Leo will update the Kubernetes deployment guide by Friday. (Sources: s4, s21)
+- Priya will review the retry logic. (Sources: s6, s7, s22)
+- Maintain the current timeout at 30 seconds. (Sources: s14)
+- The budget remains $500. (Sources: s15)
+- Cancel the announcement; no announcement will be made until the security review. (Sources: s16, s17)
 
 ## Action items
 
 - Update the Kubernetes deployment guide
   - Owner: Leo
   - Deadline: Friday
-  - Sources: s4, s21
+  - Sources: s4
 
-- Review retry logic
+- Review the retry logic
   - Owner: Priya
   - Deadline: Unspecified
-  - Sources: s6, s7, s22
+  - Sources: s6
 
 - Document error messages
   - Owner: Unspecified
   - Deadline: Unspecified
-  - Sources: s8, s9, s23
+  - Sources: s8
 
 ## Open questions / needs confirmation
 
-- How should the investigation of the PostgreSQL migration be conducted and who will lead it?
+- Migrate the database to PostgreSQL next month.
 
 ## Model pipeline
 
 - transcription: whisper-large-v3
 - refinement: openai/gpt-oss-20b
 - record: openai/gpt-oss-120b
-- Prompt version: 1.0
+- Prompt version: 1.1
