@@ -18,3 +18,11 @@ Version 0.4.0; final prompt/schema version 1.10. These are development checks, n
 The pipeline is usable and source-grounded, but paraphrase, attribution and coverage can still fail. Review reduces some errors and can also miss them. Free daily and per-minute limits remain material demo constraints; shorter excerpts help. The final output-cap code passed deterministic checks and the fresh browser holdout, while the nine-case semantic suite was run immediately before that quota-only change.
 
 Private recordings, detailed outputs, references and historical evidence are preserved locally outside the public repository. The bundled demo video records an earlier baseline; it demonstrates the workflow, not every new control.
+
+## Backup credential update - 9 October 2026
+
+- An optional second Groq credential is held as a Worker secret and tried once on upstream authentication or quota failure, using the same request/model. Intrinsically oversized requests use budget handling instead of credential rotation. Both keys can still run out of quota.
+- 46 deterministic tests passed, including backup switching, multipart audio reuse, duplicate-key handling, bounded failure and warning preservation. Production build passed.
+- The deployed API reported the backup configured and a live minutes request completed successfully on the primary key/model.
+- A separate local Worker integration check simulated primary HTTP 401 and made a real Groq request using the backup credential: HTTP 200 with the backup warning. This was a controlled failure simulation, not a claim that the primary credential failed in production.
+- Provider keys remain absent from frontend results and repository files. The technical PDF preserves the previously requested report content; this later operational update is documented here and in the README.

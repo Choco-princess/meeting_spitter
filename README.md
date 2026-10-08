@@ -50,6 +50,8 @@ Refinement proposes narrow patches rather than replacing the raw transcript. Doc
 
 If the primary minutes model exhausts its free daily quota, a separate free `qwen/qwen3.8-27b` fallback is available. Actual model IDs and fallback warnings appear in results. No paid fallback is configured.
 
+An optional backup Groq credential is stored as a second Worker secret. On an authentication or quota failure, the backend tries that credential with the same request and model before considering model fallback. Switching is bounded; keys in the same organization share limits, and a different account can also exhaust its allowance. No credentials are sent to the browser.
+
 | Folder | Purpose |
 |---|---|
 | `src/` | Interface, audio excerpts and staged workflow |

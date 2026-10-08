@@ -20,6 +20,7 @@ import { REFINE_PROMPT, RECORD_PROMPT, REVIEW_PROMPT, DETAIL_PROMPTS } from "./p
 
 interface Env {
   GROQ_API_KEY: string;
+  GROQ_API_KEY_FALLBACK?: string;
   ALLOWED_ORIGINS: string;
   SERVICE_ENABLED: string;
   RATE_LIMITER?: {
@@ -63,15 +64,29 @@ async function groq(
   body: BodyInit,
   contentType?: string,
 ) {
-  const r = await fetch(`https://api.groq.com/openai/v1/${route}`, {
+  const keys = [...new Set([env.GROQ_API_KEY, env.GROQ_API_KEY_FALLBACK].filter((key): key is string => !!key))];
+  let r: Response | undefined;
+  let fallbackCredentialUsed = false;
+  for (const [index, key] of keys.entries()) {
+    r = await fetch(`https://api.groq.com/openai/v1/${route}`, {
     method: "POST",
     headers: {
-      Authorization: `Bearer ${env.GROQ_API_KEY}`,
+      Authorization: `Bearer ${key}`,
       ...(contentType ? { "Content-Type": contentType } : {}),
     },
     body,
     signal: AbortSignal.timeout(120000),
   });
+    fallbackCredentialUsed = index > 0 || key !== env.GROQ_API_KEY;
+    if (r.ok || index === keys.length - 1) break;
+    if (![401, 403, 429].includes(r.status)) break;
+    // An intrinsically oversized request needs a smaller budget, not another key.
+    if (r.status === 429) {
+      const failure = await r.clone().json().catch(() => ({})) as { error?: { message?: string } };
+      if (/request too large/i.test(failure.error?.message || "")) break;
+    }
+  }
+  if (!r) throw new ApiError(503, "The AI service is not configured.");
   if (!r.ok) {
     const payload = (await r.json().catch(() => ({}))) as {
       error?: { message?: string };
@@ -115,7 +130,8 @@ async function groq(
       "The AI service could not complete this stage. Please retry.",
     );
   }
-  return r.json() as Promise<any>;
+  const output = await r.json() as any;
+  return { ...output, fallbackCredentialUsed };
 }
 
 async function structured<T>(
@@ -177,6 +193,8 @@ async function structured<T>(
       throw error;
     }
     const choice = response.choices?.[0];
+    if (response.fallbackCredentialUsed && !warnings.includes("Used the backup Groq credential for this stage. Shared organization quotas may still apply."))
+      warnings.push("Used the backup Groq credential for this stage. Shared organization quotas may still apply.");
     try {
       if (choice?.finish_reason !== "stop")
         throw new Error("Incomplete output");
@@ -201,12 +219,13 @@ async function handle(request: Request, env: Env) {
   const path = new URL(request.url).pathname;
   if (path === "/api/health" && request.method === "GET")
     return json({
-      ready: !!env.GROQ_API_KEY && env.SERVICE_ENABLED !== "false",
+      ready: !!(env.GROQ_API_KEY || env.GROQ_API_KEY_FALLBACK) && env.SERVICE_ENABLED !== "false",
       models: MODELS,
       promptVersion: PROMPT_VERSION,
       maxAudioBytes: MAX_AUDIO_BYTES,
       maxTranscriptChars: MAX_TRANSCRIPT_CHARS,
       fallbackRecordModel: FALLBACK_RECORD_MODEL,
+      fallbackCredentialConfigured: !!env.GROQ_API_KEY_FALLBACK,
     });
   if (!["/api/transcribe", "/api/refine", "/api/record", "/api/review"].includes(path))
     throw new ApiError(404, "Endpoint not found.");
@@ -217,7 +236,7 @@ async function handle(request: Request, env: Env) {
       503,
       "The demo is temporarily paused. Please try later.",
     );
-  if (!env.GROQ_API_KEY)
+  if (!env.GROQ_API_KEY && !env.GROQ_API_KEY_FALLBACK)
     throw new ApiError(503, "The AI service is not configured.");
   if (
     env.RATE_LIMITER &&
@@ -286,6 +305,8 @@ async function handle(request: Request, env: Env) {
       transcript.segments = [
         { id: "s1", start: 0, end: transcript.duration, text: transcript.text },
       ];
+    if (output.fallbackCredentialUsed)
+      transcript.warnings.push("Used the backup Groq credential for transcription. Shared organization quotas may still apply.");
     return json(transcript);
   }
   if (!request.headers.get("content-type")?.includes("application/json"))
@@ -324,7 +345,7 @@ async function handle(request: Request, env: Env) {
         RefinementSchema,
         "refinement",
       );
-    return json({ ...output.value, model: output.model, promptVersion: PROMPT_VERSION });
+    return json({ ...output.value, warnings: output.warnings, model: output.model, promptVersion: PROMPT_VERSION });
   }
   if (path === "/api/review" && !input.data.candidate) throw new ApiError(400, "A draft meeting record is required for review.");
   const prompt = `${path === "/api/review" ? REVIEW_PROMPT + "\n\n" : ""}${RECORD_PROMPT}\n\n${DETAIL_PROMPTS[input.data.detail || "standard"]}`;

@@ -7,6 +7,54 @@ const completion = () => new Response(JSON.stringify({ choices: [{ finish_reason
 const request = (path: string, body: object) => new Request(`https://api.test/api/${path}`, { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(body) });
 afterEach(() => vi.unstubAllGlobals());
 describe("model request budget and review boundary", () => {
+  it("tries the backup credential before changing models on a quota failure", async () => {
+    const upstream = vi.fn().mockResolvedValueOnce(new Response(JSON.stringify({ error: { message: "Rate limit on tokens per day (TPD)" } }), { status: 429 })).mockResolvedValueOnce(completion());
+    vi.stubGlobal("fetch", upstream);
+    const response = await worker.fetch(request("record", { segments }), { ...env, GROQ_API_KEY_FALLBACK: "backup-test" });
+    const data = await response.json();
+    expect(response.status).toBe(200);
+    expect(upstream).toHaveBeenCalledTimes(2);
+    expect(upstream.mock.calls.map(call => call[1].headers.Authorization)).toEqual(["Bearer test", "Bearer backup-test"]);
+    expect(JSON.parse(upstream.mock.calls[0][1].body)).toEqual(JSON.parse(upstream.mock.calls[1][1].body));
+    expect(data.model).toBe("openai/gpt-oss-120b");
+    expect(data.warnings.join()).toContain("backup Groq credential");
+    expect(JSON.stringify(data)).not.toContain("backup-test");
+  });
+  it("reuses multipart audio with the backup after an authentication failure", async () => {
+    const upstream = vi.fn().mockResolvedValueOnce(new Response("{}", { status: 401 })).mockResolvedValueOnce(new Response(JSON.stringify({ text: "Agenda approved.", duration: 5, segments: [{ start: 0, end: 5, text: "Agenda approved." }] }), { status: 200 }));
+    vi.stubGlobal("fetch", upstream);
+    const form = new FormData(); form.set("file", new File(["audio-fixture"], "meeting.wav"));
+    const response = await worker.fetch(new Request("https://api.test/api/transcribe", { method: "POST", body: form }), { ...env, GROQ_API_KEY_FALLBACK: "backup-test" });
+    expect(response.status).toBe(200);
+    expect(upstream).toHaveBeenCalledTimes(2);
+    expect(upstream.mock.calls[0][1].body).toBe(upstream.mock.calls[1][1].body);
+    expect((await response.json()).warnings.join()).toContain("backup Groq credential");
+  });
+  it("does not switch credentials for an intrinsically oversized output reservation", async () => {
+    const upstream = vi.fn().mockResolvedValue(new Response(JSON.stringify({ error: { message: "Request too large on output tokens per minute: Limit 200, Requested 2020" } }), { status: 429 }));
+    vi.stubGlobal("fetch", upstream);
+    const response = await worker.fetch(request("record", { segments }), { ...env, GROQ_API_KEY_FALLBACK: "backup-test" });
+    expect(response.status).toBe(413);
+    expect(upstream).toHaveBeenCalledTimes(1);
+  });
+  it("keeps invalid input and duplicate keys from triggering credential rotation", async () => {
+    const upstream = vi.fn().mockResolvedValue(new Response("{}", { status: 401 }));
+    vi.stubGlobal("fetch", upstream);
+    const response = await worker.fetch(request("refine", { segments }), { ...env, GROQ_API_KEY_FALLBACK: "test" });
+    expect(response.status).toBe(503);
+    expect(upstream).toHaveBeenCalledTimes(1);
+    const invalid = await worker.fetch(request("record", { segments: [] }), { ...env, GROQ_API_KEY_FALLBACK: "backup-test" });
+    expect(invalid.status).toBe(400);
+    expect(upstream).toHaveBeenCalledTimes(1);
+  });
+  it("surfaces the backup key failure without indefinite retries or secret exposure", async () => {
+    const upstream = vi.fn().mockResolvedValue(new Response("{}", { status: 403 }));
+    vi.stubGlobal("fetch", upstream);
+    const response = await worker.fetch(request("refine", { segments }), { ...env, GROQ_API_KEY_FALLBACK: "backup-test" });
+    expect(response.status).toBe(503);
+    expect(upstream).toHaveBeenCalledTimes(2);
+    expect(JSON.stringify(await response.json())).not.toContain("backup-test");
+  });
   it("handles an impossible output-minute reservation as a budget problem rather than an endless busy retry", async () => {
     const upstream = vi.fn()
       .mockResolvedValueOnce(new Response(JSON.stringify({ error: { message: "Rate limit on tokens per day (TPD)" } }), { status: 429 }))

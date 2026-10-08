@@ -84,7 +84,7 @@ describe("pipeline resilience", () => {
     const fetcher = vi
       .fn()
       .mockResolvedValueOnce(respond(raw))
-      .mockResolvedValueOnce(respond({ corrections: [] }))
+      .mockResolvedValueOnce(respond({ corrections: [], warnings: ["Used the backup Groq credential for this stage."] }))
       .mockResolvedValueOnce(respond({ record, warnings: [] }));
     vi.stubGlobal("fetch", fetcher);
     const stages: string[] = [];
@@ -99,6 +99,7 @@ describe("pipeline resilience", () => {
     expect(stages).toEqual(["transcription", "refinement", "record"]);
     expect(r.raw).toEqual(raw);
     expect(r.record?.tasks[0].owner).toBeNull();
+    expect(r.warnings).toContain("Used the backup Groq credential for this stage.");
   });
   it("preserves prior results on failure and resumes only the unfinished stage", async () => {
     let saved: Result | undefined;

@@ -162,7 +162,7 @@ export async function runPipeline(
     );
   if (!result.refined) {
     progress("refinement", "Checking terminology and preserving context…");
-    const refined = RefinementSchema.extend({ model: z.string().optional() }).parse(
+    const refined = RefinementSchema.extend({ model: z.string().optional(), warnings: z.array(z.string()).optional() }).parse(
       await call(
         "refine",
         { segments: result.raw.segments, glossary },
@@ -179,6 +179,7 @@ export async function runPipeline(
       models: { ...result.models, refinement: refined.model || result.models.refinement },
       warnings: [
         ...result.warnings,
+        ...(refined.warnings || []),
         ...(applied.corrections.some((c) => !c.applied)
           ? [
               "Some suggested edits were skipped. Expand Terminology changes to see why.",

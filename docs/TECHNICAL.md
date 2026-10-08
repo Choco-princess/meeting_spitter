@@ -12,6 +12,7 @@ Restrictive provider output reservations are reduced without truncating the tran
 
 1. Set CLOUDFLARE_ACCOUNT_ID and CLOUDFLARE_API_TOKEN locally. Adjust allowed origins in wrangler.jsonc.
 2. Store the key using `npx wrangler secret put GROQ_API_KEY`, then run `npm run deploy:api`.
+   Optionally store a backup using `npx wrangler secret put GROQ_API_KEY_FALLBACK`. The Worker tries it on upstream 401/403 or quota 429 responses, keeping the same model first. Intrinsically oversized requests adjust their budget instead. Each upstream call tries at most two distinct credentials; no key is returned in responses.
 3. Create a Cloudflare Pages project named meeting-spitter-api. In gateway/, run `npx wrangler pages deploy public --project-name meeting-spitter-api --branch main`. Its service binding points to the Worker.
 4. Set VITE_API_BASE to the public API hostname at build time; the current gateway is the default. Deploy dist/ through the supplied GitHub Pages workflow.
 5. For another repository name, update the Vite base path. Set the Pages source to GitHub Actions.
