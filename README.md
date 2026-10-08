@@ -72,6 +72,8 @@ Generated test records and user recordings are excluded from the current tree. B
 - Excerpt mode supports standard PCM/float WAV and MPEG Layer III MP3. Corrupt files, unusual encodings and other oversized formats need a valid shorter export.
 - No automatic speaker diarization or Google Meet integration. Named attribution depends on the transcript.
 - Shared free quotas can delay or block requests. Daily replenishment does not remove per-minute limits. Restrictive output caps may make notes more compact than the selected tier; a warning explains this.
+- **Known Full notes issue:** in a ten-minute real-recording test, the Qwen fallback returned only a title, with empty summary and minutes, after a rate-limit retry. Full notes is therefore unreliable under the fallback's restrictive output allowance. If this occurs, try Standard or Detailed, or process a shorter excerpt.
+- In the same comparison, some generated drafts incorrectly kept answered questions under unresolved questions. Those drafts did not receive the extra accuracy review pass; keeping review enabled may help, but does not guarantee a correction.
 - Detail levels and corrective review do not guarantee exhaustive coverage or zero hallucinations.
 - Progress stays in the open page; reloading loses the run. Cancellation cannot always stop provider work already accepted.
 - Audio/text pass through Cloudflare to Groq. This app does not persist them on its own backend.
