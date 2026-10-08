@@ -1,0 +1,49 @@
+[00:00]  Maya, let us start our engineering planning meeting.
+
+[00:04]  The API pilot is working, but we have not approved a public launch.
+
+[00:09]  We agree to keep the pilot internal until the security review is complete.
+
+[00:15]  Leo, I will update the Kubernetes deployment guide by Friday.
+
+[00:20]  Maya, thank you, Leo.
+
+[00:23]  Priya, can you review the retry logic?
+
+[00:26]  Yes, I will review it.
+
+[00:30]  We also need to document the error messages.
+
+[00:35]  No one has been assigned to that yet.
+
+[00:38]  Maybe we should migrate the database to Postgres next month.
+
+[00:43]  Let us investigate first.
+
+[00:47]  We have not decided to migrate.
+
+[00:50]  Agreed.
+
+[00:52]  Our current timeout stays at 30 seconds, not 13.
+
+[00:57]  The budget remains $500.
+
+[01:01]  We initially said that I would send the announcement tomorrow, but cancel that task.
+
+[01:07]  There will be no announcement until the security review.
+
+[01:10]  Pre-ya, the P-95 latency is 200 milliseconds.
+
+[01:16]  We should keep watching it.
+
+[01:18]  Mya, to recap, the pilot stays internal.
+
+[01:23]  Leo owns the deployment guide due Friday.
+
+[01:26]  Priya will review retry logic without a fixed deadline.
+
+[01:31]  Documenting error messages is needed but unassigned.
+
+[01:35]  The migration is only a proposal.
+
+[01:38]  Thank you everyone.

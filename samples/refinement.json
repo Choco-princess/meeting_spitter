@@ -1,0 +1,189 @@
+{
+  "transcript": {
+    "text": " Maya, let us start our engineering planning meeting.  The API pilot is working, but we have not approved a public launch.  We agree to keep the pilot internal until the security review is complete.  Leo, I will update the Kubernetes deployment guide by Friday.  Maya, thank you, Leo.  Priya, can you review the retry logic?  Yes, I will review it.  We also need to document the error messages.  No one has been assigned to that yet.  Maybe we should migrate the database to PostgreSQL next month.  Let us investigate first.  We have not decided to migrate.  Agreed.  Our current timeout stays at 30 seconds, not 13.  The budget remains $500.  We initially said that I would send the announcement tomorrow, but cancel that task.  There will be no announcement until the security review.  Priya, the p95 latency is 200 milliseconds.  We should keep watching it.  Maya, to recap, the pilot stays internal.  Leo owns the deployment guide due Friday.  Priya will review retry logic without a fixed deadline.  Documenting error messages is needed but unassigned.  The migration is only a proposal.  Thank you everyone.",
+    "duration": 100.180123648,
+    "segments": [
+      {
+        "id": "s1",
+        "start": 0,
+        "end": 3.32,
+        "text": " Maya, let us start our engineering planning meeting."
+      },
+      {
+        "id": "s2",
+        "start": 4.42,
+        "end": 8.94,
+        "text": " The API pilot is working, but we have not approved a public launch."
+      },
+      {
+        "id": "s3",
+        "start": 9.92,
+        "end": 14.099999,
+        "text": " We agree to keep the pilot internal until the security review is complete."
+      },
+      {
+        "id": "s4",
+        "start": 15.2,
+        "end": 19.1,
+        "text": " Leo, I will update the Kubernetes deployment guide by Friday."
+      },
+      {
+        "id": "s5",
+        "start": 20.199999,
+        "end": 22.42,
+        "text": " Maya, thank you, Leo."
+      },
+      {
+        "id": "s6",
+        "start": 23.539999,
+        "end": 26.14,
+        "text": " Priya, can you review the retry logic?"
+      },
+      {
+        "id": "s7",
+        "start": 26.14,
+        "end": 30.96,
+        "text": " Yes, I will review it."
+      },
+      {
+        "id": "s8",
+        "start": 30.96,
+        "end": 35.7,
+        "text": " We also need to document the error messages."
+      },
+      {
+        "id": "s9",
+        "start": 35.7,
+        "end": 38.36,
+        "text": " No one has been assigned to that yet."
+      },
+      {
+        "id": "s10",
+        "start": 38.36,
+        "end": 43.76,
+        "text": " Maybe we should migrate the database to PostgreSQL next month."
+      },
+      {
+        "id": "s11",
+        "start": 43.76,
+        "end": 47.739998,
+        "text": " Let us investigate first."
+      },
+      {
+        "id": "s12",
+        "start": 47.739998,
+        "end": 50.3,
+        "text": " We have not decided to migrate."
+      },
+      {
+        "id": "s13",
+        "start": 50.3,
+        "end": 52.94,
+        "text": " Agreed."
+      },
+      {
+        "id": "s14",
+        "start": 52.94,
+        "end": 57.8,
+        "text": " Our current timeout stays at 30 seconds, not 13."
+      },
+      {
+        "id": "s15",
+        "start": 57.8,
+        "end": 61.219997,
+        "text": " The budget remains $500."
+      },
+      {
+        "id": "s16",
+        "start": 61.219997,
+        "end": 67.18,
+        "text": " We initially said that I would send the announcement tomorrow, but cancel that task."
+      },
+      {
+        "id": "s17",
+        "start": 67.18,
+        "end": 70.7,
+        "text": " There will be no announcement until the security review."
+      },
+      {
+        "id": "s18",
+        "start": 70.7,
+        "end": 76.619995,
+        "text": " Priya, the p95 latency is 200 milliseconds."
+      },
+      {
+        "id": "s19",
+        "start": 76.619995,
+        "end": 78.54,
+        "text": " We should keep watching it."
+      },
+      {
+        "id": "s20",
+        "start": 78.54,
+        "end": 82.340004,
+        "text": " Maya, to recap, the pilot stays internal."
+      },
+      {
+        "id": "s21",
+        "start": 83.48,
+        "end": 85.7,
+        "text": " Leo owns the deployment guide due Friday."
+      },
+      {
+        "id": "s22",
+        "start": 86.86,
+        "end": 89.98,
+        "text": " Priya will review retry logic without a fixed deadline."
+      },
+      {
+        "id": "s23",
+        "start": 91.1,
+        "end": 94.1,
+        "text": " Documenting error messages is needed but unassigned."
+      },
+      {
+        "id": "s24",
+        "start": 95.16,
+        "end": 97.06,
+        "text": " The migration is only a proposal."
+      },
+      {
+        "id": "s25",
+        "start": 98.2,
+        "end": 99.08,
+        "text": " Thank you everyone."
+      }
+    ],
+    "warnings": []
+  },
+  "corrections": [
+    {
+      "segmentId": "s10",
+      "original": "Postgres",
+      "replacement": "PostgreSQL",
+      "reason": "Correct spelling of database name per glossary",
+      "applied": true
+    },
+    {
+      "segmentId": "s18",
+      "original": "Pre-ya",
+      "replacement": "Priya",
+      "reason": "Speaker name typo",
+      "applied": true
+    },
+    {
+      "segmentId": "s18",
+      "original": "P-95",
+      "replacement": "p95",
+      "reason": "Standardized latency metric notation per glossary",
+      "applied": true
+    },
+    {
+      "segmentId": "s20",
+      "original": "Mya",
+      "replacement": "Maya",
+      "reason": "Speaker name typo",
+      "applied": true
+    }
+  ]
+}
