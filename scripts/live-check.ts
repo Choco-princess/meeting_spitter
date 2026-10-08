@@ -13,7 +13,7 @@ import {
 } from "../shared/schema";
 const base =
   process.env.API_BASE ||
-  "https://meeting-spitter-api.ajaymeena69031.workers.dev";
+  "https://meeting-spitter-api.pages.dev";
 async function post(path: string, body: FormData | object) {
   const r = await fetch(`${base}/api/${path}`, {
     method: "POST",

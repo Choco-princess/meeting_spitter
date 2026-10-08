@@ -8,7 +8,7 @@ A meeting assistant that turns English audio into a raw transcript, a refined tr
 
 1. Upload audio or choose **Try a sample meeting**. The bundled sample is clearly synthetic, generated with Windows speech synthesis from an original fictional meeting script.
 2. Optionally enter spellings of names and technical terms.
-3. Select **Make my meeting useful**. All three stages run in order.
+3. Select **Spit the minutes**. All three stages run in order.
 4. Inspect minutes, decisions/tasks and both transcripts. Source timestamps play the corresponding audio.
 5. Download the result ZIP, individual transcripts, Markdown minutes or structured JSON.
 

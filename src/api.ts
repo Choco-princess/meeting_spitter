@@ -14,7 +14,7 @@ const API =
   import.meta.env.VITE_API_BASE ||
   (import.meta.env.DEV
     ? ""
-    : "https://meeting-spitter-api.ajaymeena69031.workers.dev");
+    : "https://meeting-spitter-api.pages.dev");
 export type Stage = "transcription" | "refinement" | "record";
 export class ServiceError extends Error {
   constructor(

@@ -24,7 +24,7 @@ The initial submission supports files up to 24 MiB and transcripts up to 14,000 
 
 ## Hosting and credentials
 
-GitHub repository and Pages: `Choco-princess/meeting_spitter`. Cloudflare Worker: `meeting-spitter-api.ajaymeena69031.workers.dev`. Groq credentials exist only in an ignored local development file and a Cloudflare secret. The frontend contains the public API URL, not credentials. Fixed routes and model IDs prevent use as an arbitrary authenticated provider proxy. Per-IP limits are 30 requests/minute. CORS limits supported browser origins but is not authentication or a global quota safeguard. `SERVICE_ENABLED=false` pauses service.
+GitHub repository and Pages: `Choco-princess/meeting_spitter`. Cloudflare API gateway: `meeting-spitter-api.pages.dev`, forwarding through a service binding to the `meeting-spitter-api` Worker. Groq credentials exist only in an ignored local development file and a Cloudflare secret. The frontend contains the public API URL, not credentials. Fixed routes and model IDs prevent use as an arbitrary authenticated provider proxy. Per-IP limits are 30 requests/minute. CORS limits supported browser origins but is not authentication or a global quota safeguard. `SERVICE_ENABLED=false` pauses service.
 
 No application-level audio or transcript persistence. The third-party providers process the submitted data, and their retention policies apply. Static sample audio and deliberately exported synthetic sample results are public submission artifacts.
 

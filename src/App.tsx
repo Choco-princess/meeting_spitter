@@ -233,7 +233,7 @@ export default function App() {
           meeting_spitter
         </a>
         <span className="top-note">
-          <i />A little less meeting. A lot more clarity.
+          <i /> Spill the meeting. Keep the receipts.
         </span>
         <a
           className="source-link"
@@ -247,17 +247,17 @@ export default function App() {
       <main>
         <section className="intro">
           <div className="eyebrow">
-            <span /> FROM CONVERSATION TO CLARITY
+            <span /> LESS YAPPING. MORE HAPPENING.
           </div>
           <h1>
-            Good meetings deserve
+            This meeting could’ve
             <br />
-            <em>clear next steps.</em>
+            <em>been a to-do list.</em>
           </h1>
           <p>
-            Turn your recording into readable minutes, real decisions,
-            <br className="desktop-break" /> and a to-do list that stays true to
-            the conversation.
+            Drop the recording. Get the minutes, decisions and next steps.
+            <br className="desktop-break" /> For everyone who nodded and then
+            forgot what they agreed to.
           </p>
         </section>
         <div className="workspace">
@@ -265,8 +265,8 @@ export default function App() {
             <div className="panel-heading">
               <span className="section-index">01</span>
               <div>
-                <h2 id="upload-title">Bring the conversation</h2>
-                <p>One recording. Everything in order.</p>
+                <h2 id="upload-title">Drop the meeting</h2>
+                <p>You did the talking. We’ll take notes.</p>
               </div>
             </div>
             <input
@@ -357,7 +357,7 @@ export default function App() {
                   </>
                 ) : (
                   <>
-                    {result ? "Resume processing" : "Make my meeting useful"}{" "}
+                    {result ? "Resume processing" : "Spit the minutes"}{" "}
                     <span>→</span>
                   </>
                 )}
@@ -381,8 +381,8 @@ export default function App() {
             <div className="panel-heading">
               <span className="section-index">02</span>
               <div>
-                <h2 id="output-title">Leave with a clear record</h2>
-                <p>The important things, without the guesswork.</p>
+                <h2 id="output-title">The minutes. The mission.</h2>
+                <p>Who’s doing what? Start here.</p>
               </div>
               <span className={`status-pill ${complete ? "done" : ""}`}>
                 {complete ? "READY" : busy ? "IN PROGRESS" : "YOUR WORKSPACE"}
@@ -442,13 +442,13 @@ export default function App() {
                     <i>✓</i>
                     <b />
                   </div>
-                  <span className="paper-sticker">All on the same page.</span>
+                  <span className="paper-sticker">Keep the receipts.</span>
                 </div>
-                <h3>Less “what did we decide?”</h3>
+                <h3>“Wait, what did we agree to?”</h3>
                 <p>
-                  Your minutes, decisions and action items
+                  Your future self would like some notes.
                   <br />
-                  will find a home right here.
+                  They’ll land right here.
                 </p>
                 <div className="empty-tags">
                   <span>Clear minutes</span>
@@ -601,8 +601,8 @@ export default function App() {
                             </span>
                           </div>
                           <p className="transcript-hint">
-                            Click a timestamp to listen. Speaker names appear
-                            only when recognized in the audio.
+                            Click a timestamp to listen. This version does not
+                            identify or label speakers.
                           </p>
                           {(tab === "raw"
                             ? result.raw
@@ -731,7 +731,7 @@ export default function App() {
       <footer className="site-footer">
         <span>
           meeting_spitter <span className="footer-dot">·</span> Built for the
-          follow-through.
+          part after “great meeting, everyone.”
         </span>
         <span>Three model stages. One useful record.</span>
       </footer>
