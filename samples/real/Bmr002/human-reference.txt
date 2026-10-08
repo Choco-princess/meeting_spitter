@@ -1,0 +1,170 @@
+[2.9-3.6s] me025: and -
+[2.9-5.7s] me011: Well, I'm not sure if we can do automated alignment or not.
+[6.3-6.6s] me011: I mean,
+[6.6-11.5s] me011: e- especially in e- with speaker change in a meeting like this, where we're overlapping so much, I don't think we're gonna have a -
+[7.5-7.8s] me022: I th-
+[11.8-12.4s] me011: a prayer.
+[13.3-15.2s] me025: Oh sure, we are. We've got individual microphones.
+[14.3-15.1s] me022: Well, to get -
+[15.1-17.5s] me022: to get the r- to get the actual transcript, I think
+[17.5-18.7s] me022: we'll do O_K because of -
+[18.7-20.1s] me022: because of the separate channels.
+[20.3-22.4s] me011: Oh, that's true. Right. We could just do it through these.
+[22.2-22.8s] me022: Right.
+[22.2-22.7s] me025: Yeah.
+[23.1-24.6s] me011: I hadn't even thought about that. Sure.
+[25.0-25.5s] me011: Um.
+[26.0-28.2s] me011: In terms of data formats, uh
+[28.7-30.4s] me011: what I did for the Digits stuff was just
+[30.4-31.5s] me011: to hand-rolled my own.
+[31.5-32.8s] me011: That looks like this form.
+[33.5-35.8s] me011: You know, it's just uh something that's easy to parse in Perl.
+[36.2-36.8s] me011: Um.
+[37.0-38.3s] me011: Probably for
+[38.8-41.3s] me011: the full one, we'll want to do something like S_T_ M.
+[42.5-44.8s] me011: I mean, some format that our tools already work with.
+[42.5-43.2s] me025: Yeah.
+[44.8-45.4s] me025: Well,
+[47.0-47.9s] me025: Yes,
+[48.1-49.1s] me025: although that might @@
+[49.1-50.2s] me025: presumably we'll have one -
+[50.2-52.9s] me025: we'll have several formats that you can interconvert between.
+[52.9-55.5s] me025: When we want to do recognition we'll do S_T_M, but
+[53.1-53.6s] me022: Right.
+[53.1-54.2s] me011: Yeah, presumably.
+[55.5-56.8s] me025: if we're -
+[56.8-58.7s] me025: rather than - rather than designing our own format,
+[58.7-59.8s] me025: we'll just take whatever
+[59.8-62.4s] me025: comes out of the tools that we can find to use, I think.
+[61.8-62.9s] me011: Yeah, I guess that's true.
+[62.9-63.4s] me011: Yeah.
+[63.5-65.2s] me025: I - I - I've got no idea
+[63.8-64.3s] me022: Right.
+[65.6-66.4s] me025: what that'll look like.
+[66.6-67.0s] me025: but
+[67.4-68.4s] me022: Well I know that -
+[67.5-68.6s] me025: on our speaker phones.
+[68.4-69.5s] me022: I know that um
+[71.1-73.7s] me022: the Mississippi State tools, at least th- what the produce
+[73.7-75.3s] me022: does not come out in S_T_M format.
+[75.5-75.9s] me025: Right.
+[75.9-78.6s] me022: They - they basically give
+[78.6-79.2s] me022: um
+[79.4-81.2s] me022: They subdivide into WAVE files
+[81.2-82.0s] me022: and then they give -
+[82.0-83.5s] me022: for each, they give a one -
+[83.5-84.0s] me022: oh, you know,
+[84.0-87.0s] me022: a WAVE file that g- indicates where the start and stop times are,
+[86.9-87.6s] me025: Mmm-hmm.
+[87.0-87.5s] me022: and then -
+[88.1-88.7s] me022: um
+[89.1-90.0s] me022: and then give the
+[90.2-91.0s] me022: uh
+[91.3-91.8s] me022: whatever -
+[91.8-92.2s] me022: the
+[92.3-93.3s] me022: sentence information.
+[92.3-92.8s] me025: Yeah.
+[93.7-94.1s] me022: But
+[94.4-94.8s] me022: I mean
+[95.0-95.6s] me022: Ni- i-
+[95.8-96.4s] me022: i- i- it -
+[96.4-97.9s] me022: as you said, it was easy to convert
+[97.9-99.5s] me022: back and forth between
+[100.2-100.8s] me022: um
+[101.4-102.9s] me022: that file and S_T_M format,
+[102.9-105.0s] me022: in fact what I did is I took the Mississippi State data,
+[105.0-107.1s] me022: and just made S_T_M files out of it.
+[107.0-107.4s] me025: Mm-hmm.
+[108.7-109.2s] me025: O_K.
+[109.2-109.5s] me025: Good.
+[110.2-112.1s] me011: O_K. "MATE Mark-up Framework". O_K?
+[111.8-112.6s] me025: Right.
+[112.6-114.8s] fe008: " Specification of uh Coding workbench",
+[115.0-115.6s] me022: Mm-hmm.
+[115.7-117.7s] fe008: That's one o- thing, and then, back in here
+[117.5-119.5s] me011: Oh, no! It has the word "X_M_ L " in it!
+[120.0-120.8s] me025: Oh, good.
+[121.7-123.4s] me025: It must be - It must be fundable then.
+[124.5-125.6s] fe008: "K_C_M file formats",
+[125.3-126.0s] me022: Oh, looks like -
+[125.6-126.0s] fe008: This is the
+[126.0-127.8s] me022: Looks like uh work packages.
+[127.8-129.5s] me022: Must be a European project.
+[127.8-128.3s] me025: Yeah.
+[128.8-129.5s] me025: Oh, yeah.
+[129.5-131.5s] fe008: Yeah, it is European. Both of these are Eur- European,
+[129.6-130.2s] me025: @@
+[131.5-132.2s] fe008: but they have
+[132.5-134.3s] fe008: you know, American contributions, and stuff.
+[133.9-135.3s] me022: Oh, so they're using the Alembic
+[135.9-137.2s] me022: Workbench, from Mitre.
+[137.4-138.0s] me025: Alembic?
+[138.3-139.0s] me022: I guess.
+[138.5-139.0s] fe008: Yeah.
+[138.6-139.5s] me011: Is that free?
+[140.3-140.7s] me022: I don't know.
+[140.3-142.3s] fe008: Well i- but you see they have a whole bunch of things.
+[142.3-144.0s] fe008: What they're doing is trying to bring together -
+[144.0-146.3s] fe008: and they rate things. I wasn't focused on that so I didn't -
+[146.3-147.2s] fe008: Let me show y-
+[147.2-148.2s] fe008: Have you seen this one, Dan?
+[149.0-149.3s] me025: No.
+[149.1-150.3s] fe008: And I'll try to get one for you, too.
+[151.1-151.8s] fe008: Oh, you've got one.
+[151.8-152.8s] fe008: What are you looking at here?
+[153.4-154.9s] fe008: He's got the Mark-up Framework.
+[154.9-155.3s] fe008: Oh, yeah.
+[155.3-156.3s] fe008: Different coding schemes.
+[156.0-157.4s] me011: But it doesn't have enough pictures.
+[157.4-158.0s] fe008: O_K.
+[157.4-157.9s] me011: So, I think
+[157.9-161.0s] me011: it will require too much reading to understand whether this is anything
+[159.1-159.4s] me022: Oh,
+[159.4-160.1s] me022: this is,
+[160.1-160.6s] me022: I see.
+[161.5-162.6s] me022: They're reviewing, and -
+[161.7-163.0s] me011: that we can easily use.
+[163.3-167.6s] fe008: What they're doing is they're comp- comparing all these existing things that have been submitted and
+[167.8-168.4s] me022: I see.
+[168.0-170.2s] fe008: And it includes, this one includes the T_E_I and
+[170.7-171.0s] fe008: uh
+[172.3-173.4s] fe008: so it's - it's um
+[174.0-175.1s] fe008: pretty broad-based.
+[175.3-176.4s] fe008: These things do seem to be -
+[175.3-177.0s] me011: "T_E_I" is - ?
+[176.7-177.3s] me022: Mitre,
+[176.9-178.6s] fe008: That's the Text Encoding Initiative.
+[178.2-178.9s] me011: Oh.
+[179.3-180.8s] fe008: That's a way of marking- mark-up.
+[180.8-184.0s] fe008: so, you know, but focus on tools to do this stuff
+[184.0-187.4s] fe008: um, I do have a file also in addition to those things, but
+[188.3-189.6s] fe008: it'll take me just a second here
+[189.6-190.7s] me011: Well, I guess X_M_L
+[190.7-193.5s] me011: makes some amount of sense. I'm not actually familiar with it but
+[194.0-195.8s] me011: it seems to be the sort of thing
+[196.0-197.2s] me011: that this would be good for.
+[197.8-198.2s] me011: But -
+[197.9-199.1s] fe008: Well, yeah, I mean, if you start with a -
+[199.2-200.5s] fe008: a basic transcription
+[200.8-202.0s] fe008: and a good filter.
+[202.0-202.6s] me011: Mm-hmm.
+[202.1-202.7s] fe008: You can -
+[202.7-203.6s] fe008: I mean, that's
+[203.8-205.3s] fe008: sort of my feeling about it, that you should be -
+[205.8-208.0s] fe008: you should be able to translate between
+[208.0-210.1s] fe008: an X_M_L and non-X_M_L version cuz most -
+[209.7-210.0s] me011: Right.
+[210.5-212.9s] fe008: at least, you know, with a focus on discourse, mostly.
+[213.2-214.0s] fe008: Oh! I wanted to m-
+[215.2-218.4s] fe008: This - this approach here - This is Uli Heid from Stuttgart -
+[218.4-221.4s] fe008: is um a query language for research in phonetics where he
+[221.8-224.6s] fe008: wants to build in ToBI tags and - so you can
+[224.6-225.2s] fe008: determine
+[225.6-227.6s] fe008: um - I wanted to mention this to you. I was
+[227.6-228.2s] me025: Mm-hmm.
+[227.6-229.0s] fe008: going to come by and ask you about this.
+[229.3-231.4s] fe008: Do you know about the Stuttgart um people?
+[233.3-235.5s] fe008: Because he's saying if you represent -
+[236.1-236.8s] me025: I don't think so.
+[236.1-237.7s] fe008: He says that uh in German
+[238.0-240.4s] fe008: "selbst" is used in two different ways so you have

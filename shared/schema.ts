@@ -5,7 +5,7 @@ export const MODELS = {
   refinement: "openai/gpt-oss-20b",
   record: "openai/gpt-oss-120b",
 } as const;
-export const PROMPT_VERSION = "1.2";
+export const PROMPT_VERSION = "1.3";
 export const MAX_AUDIO_BYTES = 24 * 1024 * 1024;
 export const MAX_TRANSCRIPT_CHARS = 14000;
 export const SegmentSchema = z.object({
@@ -66,7 +66,11 @@ export const RecordDraftSchema = RecordSchema.omit({ decisions: true, tasks: tru
     }),
   ),
   taskCandidates: z.array(
-    RecordSchema.shape.tasks.element.extend({ status: z.enum(["agreed", "proposed"]) }),
+    z.object({
+      status: z.enum(["agreed", "proposed"]),
+      ownerAttribution: z.enum(["named_assignment", "unidentified_speaker"]),
+      ...RecordSchema.shape.tasks.element.shape,
+    }),
   ),
 });
 export function finalizeRecord(
@@ -80,7 +84,10 @@ export function finalizeRecord(
       .map(({ status: _, ...d }) => d),
     tasks: taskCandidates
       .filter((t) => t.status === "agreed")
-      .map(({ status: _, ...t }) => t),
+      .map(({ status: _, ownerAttribution, ...t }) => ({
+        ...t,
+        owner: ownerAttribution === "named_assignment" ? t.owner : null,
+      })),
     openQuestions: [
       ...new Set([
         ...record.openQuestions,

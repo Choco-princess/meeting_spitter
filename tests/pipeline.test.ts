@@ -163,8 +163,8 @@ describe("pipeline resilience", () => {
     const r = finalizeRecord({
       ...base,
       taskCandidates: [
-        { ...tasks[0], status: "agreed" },
-        { description: "Investigate tool licensing", owner: null, deadline: null, sourceIds: ["s2"], status: "proposed" },
+        { ...tasks[0], owner: "Nearby name", ownerAttribution: "unidentified_speaker", status: "agreed" },
+        { description: "Investigate tool licensing", owner: null, deadline: null, sourceIds: ["s2"], ownerAttribution: "unidentified_speaker", status: "proposed" },
       ],
       decisionCandidates: [
         { status: "agreed", text: "Keep pilot internal", sourceIds: ["s1"] },

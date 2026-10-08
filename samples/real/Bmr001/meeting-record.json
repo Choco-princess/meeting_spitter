@@ -1,0 +1,969 @@
+{
+  "schemaVersion": "1.0",
+  "filename": "Bmr001-300-540.wav",
+  "createdAt": "2026-10-08T16:18:09.743Z",
+  "models": {
+    "transcription": "whisper-large-v3",
+    "refinement": "openai/gpt-oss-20b",
+    "record": "openai/gpt-oss-120b"
+  },
+  "promptVersion": "1.3",
+  "raw": {
+    "text": " and run them up through the center so that wires aren't, people aren't tripping over the wires and so on. Are we going to, I mean, is it going to be over there or is it going to be in there? It's going to, it's, for reasons, because of the microphone runs, we want that chunk there. There's more equipment in there. Right. But the idea is that there are these microphones on the table. There are some cables coming down under a nice mat. And then that's, a bunch of them get sort of converted digital there. And the idea is that this gets replaced by a cabinet with doors so that it's not open to fiddling. So that's what's going to happen. Right. Do we have, like, a cabinet on order, or do we just need to do that? We need to do that. It's on the list of things to do. I keep on hoping that they're going to get done, but they don't. Well, I can help them get done. One question is budget. do we have any money at all that we can go out and spend on things like cabinets or a hard drive or things like that? I mean, I don't know. Did we spend the budget already that we had? Yeah. How much are we talking about? I don't know. A cabinet is probably going to cost $100, $200, something like that. Yeah, we can spend under $1,000 or something. I'm not worrying about it. I think I'm more worried about things being kept in a funky state long enough that that stuff gets broken. Well, I think our intention at this point is when we're not using it to record a meeting, we'll coil them all up and put them under so that people will not be tripping over them and so on. We should get to a nice kind of working state of a setup as quickly as possible. Yeah, and there's also the minor matter. it would be kind of nice to be able to bring people in and say, yes, this is where we do such and such. And they be able to see it Yeah I mean it less important than doing what we doing right now Yeah So I mean there one big issue with the equipment still which is ultimately we can the idea is to have any number of these wired headsets, but there's this amplification problem. I built this thing. It's very noisy. We're actually recording. I'm going through it at the moment, but it's so noisy that I'm not using it for this. was designed to be used for the desktop media as well but i'm using running that through my damp machine as a preamp as an alternative well we should be able to just go buy some preamps yeah it's just you see how clumsy this is right i have to use these batteries to bias them and i'm only getting two channels and they're a bunch of they're like three connectors in the circuit the thing is like it's it's not it's not that the thing doesn't exist commercially but there isn't in one unit which does the whole thing in one sweep. So it seemed like it was a good idea to make one. And I'm still not sure. I mean, I think I probably know how to fix this. I can probably rebuild it better so it doesn't have such noise. Well, ultimately we're gonna need to build one anyway. Are we? Sure, because we're gonna have to put it in a PDA. Well. If we have microphones in a PDA, it's gonna need bias and a preamp. I guess I sort of figured that Jim would do that at some point. Yeah. Jim is busy at the moment, that's the problem. I was kind of hoping that Jim was gonna build this box. Yeah. But he hasn't had time. I think he is quite interested in doing it. Okay, well, if it's too noisy and if there's something we can buy, again, for a moderate amount of price, even if it takes a couple of lots or something, maybe we should just do it and then later we can replace it with, because there may be other considerations that will go into the design, are getting some experience with",
+    "segments": [
+      {
+        "id": "s1",
+        "start": 0,
+        "end": 3.24,
+        "text": " and run them up through the center so that wires aren't,"
+      },
+      {
+        "id": "s2",
+        "start": 3.24,
+        "end": 5.46,
+        "text": " people aren't tripping over the wires and so on."
+      },
+      {
+        "id": "s3",
+        "start": 5.46,
+        "end": 6.96,
+        "text": " Are we going to, I mean, is it going to be over there"
+      },
+      {
+        "id": "s4",
+        "start": 6.96,
+        "end": 8.9,
+        "text": " or is it going to be in there?"
+      },
+      {
+        "id": "s5",
+        "start": 8.9,
+        "end": 11.639999,
+        "text": " It's going to, it's, for reasons,"
+      },
+      {
+        "id": "s6",
+        "start": 11.639999,
+        "end": 14.54,
+        "text": " because of the microphone runs, we want that chunk there."
+      },
+      {
+        "id": "s7",
+        "start": 14.54,
+        "end": 15.759999,
+        "text": " There's more equipment in there."
+      },
+      {
+        "id": "s8",
+        "start": 15.759999,
+        "end": 17.06,
+        "text": " Right."
+      },
+      {
+        "id": "s9",
+        "start": 17.06,
+        "end": 19.5,
+        "text": " But the idea is that there are these microphones on the table."
+      },
+      {
+        "id": "s10",
+        "start": 19.5,
+        "end": 23.24,
+        "text": " There are some cables coming down under a nice mat."
+      },
+      {
+        "id": "s11",
+        "start": 23.24,
+        "end": 26.14,
+        "text": " And then that's, a bunch of them get sort"
+      },
+      {
+        "id": "s12",
+        "start": 26.14,
+        "end": 27.8,
+        "text": " of converted digital there."
+      },
+      {
+        "id": "s13",
+        "start": 27.8,
+        "end": 34.36,
+        "text": " And the idea is that this gets replaced by a cabinet with doors so that it's not open to fiddling."
+      },
+      {
+        "id": "s14",
+        "start": 35.62,
+        "end": 36.62,
+        "text": " So that's what's going to happen."
+      },
+      {
+        "id": "s15",
+        "start": 36.94,
+        "end": 37.1,
+        "text": " Right."
+      },
+      {
+        "id": "s16",
+        "start": 38.7,
+        "end": 42.68,
+        "text": " Do we have, like, a cabinet on order, or do we just need to do that?"
+      },
+      {
+        "id": "s17",
+        "start": 43.02,
+        "end": 43.84,
+        "text": " We need to do that."
+      },
+      {
+        "id": "s18",
+        "start": 43.92,
+        "end": 45.559998,
+        "text": " It's on the list of things to do."
+      },
+      {
+        "id": "s19",
+        "start": 45.879997,
+        "end": 49.239998,
+        "text": " I keep on hoping that they're going to get done, but they don't."
+      },
+      {
+        "id": "s20",
+        "start": 49.8,
+        "end": 52.62,
+        "text": " Well, I can help them get done."
+      },
+      {
+        "id": "s21",
+        "start": 53.02,
+        "end": 54.039997,
+        "text": " One question is budget."
+      },
+      {
+        "id": "s22",
+        "start": 54.039997,
+        "end": 59.679996,
+        "text": " do we have any money at all that we can go out and spend on things like cabinets or a hard drive or things like that?"
+      },
+      {
+        "id": "s23",
+        "start": 59.839996,
+        "end": 60.479996,
+        "text": " I mean, I don't know."
+      },
+      {
+        "id": "s24",
+        "start": 60.539997,
+        "end": 63.26,
+        "text": " Did we spend the budget already that we had?"
+      },
+      {
+        "id": "s25",
+        "start": 63.44,
+        "end": 63.739998,
+        "text": " Yeah."
+      },
+      {
+        "id": "s26",
+        "start": 66.619995,
+        "end": 68.34,
+        "text": " How much are we talking about?"
+      },
+      {
+        "id": "s27",
+        "start": 71.1,
+        "end": 74.06,
+        "text": " I don't know."
+      },
+      {
+        "id": "s28",
+        "start": 74.21999,
+        "end": 77.979996,
+        "text": " A cabinet is probably going to cost $100, $200, something like that."
+      },
+      {
+        "id": "s29",
+        "start": 78.14,
+        "end": 80.6,
+        "text": " Yeah, we can spend under $1,000 or something."
+      },
+      {
+        "id": "s30",
+        "start": 80.84,
+        "end": 81.78,
+        "text": " I'm not worrying about it."
+      },
+      {
+        "id": "s31",
+        "start": 81.78,
+        "end": 88.58,
+        "text": " I think I'm more worried about things being kept in a funky state long enough that that stuff gets broken."
+      },
+      {
+        "id": "s32",
+        "start": 90.58,
+        "end": 94.14,
+        "text": " Well, I think our intention at this point is when we're not using it to record a meeting,"
+      },
+      {
+        "id": "s33",
+        "start": 94.28,
+        "end": 99.119995,
+        "text": " we'll coil them all up and put them under so that people will not be tripping over them and so on."
+      },
+      {
+        "id": "s34",
+        "start": 101.54,
+        "end": 106.619995,
+        "text": " We should get to a nice kind of working state of a setup as quickly as possible."
+      },
+      {
+        "id": "s35",
+        "start": 106.7,
+        "end": 108.32,
+        "text": " Yeah, and there's also the minor matter."
+      },
+      {
+        "id": "s36",
+        "start": 108.32,
+        "end": 111.2,
+        "text": " it would be kind of nice to be able to bring people in"
+      },
+      {
+        "id": "s37",
+        "start": 111.2,
+        "end": 113.32,
+        "text": " and say, yes, this is where we do such and such."
+      },
+      {
+        "id": "s38",
+        "start": 113.32,
+        "end": 129.12,
+        "text": " And they be able to see it Yeah I mean it less important than doing what we doing right now Yeah So I mean there one big issue with the equipment still which is ultimately we can the idea"
+      },
+      {
+        "id": "s39",
+        "start": 129.12,
+        "end": 134.5,
+        "text": " is to have any number of these wired headsets, but there's this amplification problem."
+      },
+      {
+        "id": "s40",
+        "start": 134.5,
+        "end": 136.66,
+        "text": " I built this thing."
+      },
+      {
+        "id": "s41",
+        "start": 136.66,
+        "end": 137.66,
+        "text": " It's very noisy."
+      },
+      {
+        "id": "s42",
+        "start": 137.66,
+        "end": 138.66,
+        "text": " We're actually recording."
+      },
+      {
+        "id": "s43",
+        "start": 138.66,
+        "end": 142.76,
+        "text": " I'm going through it at the moment, but it's so noisy that I'm not using it for this."
+      },
+      {
+        "id": "s44",
+        "start": 142.76,
+        "end": 147.24,
+        "text": " was designed to be used for the desktop media as well but i'm using running that through my"
+      },
+      {
+        "id": "s45",
+        "start": 148.12,
+        "end": 153.56,
+        "text": " damp machine as a preamp as an alternative well we should be able to just go buy some preamps"
+      },
+      {
+        "id": "s46",
+        "start": 154.92,
+        "end": 161.4,
+        "text": " yeah it's just you see how clumsy this is right i have to use these batteries to bias them and i'm"
+      },
+      {
+        "id": "s47",
+        "start": 161.4,
+        "end": 165.56,
+        "text": " only getting two channels and they're a bunch of they're like three connectors in the circuit the"
+      },
+      {
+        "id": "s48",
+        "start": 165.56,
+        "end": 172.52,
+        "text": " thing is like it's it's not it's not that the thing doesn't exist commercially but there isn't"
+      },
+      {
+        "id": "s49",
+        "start": 172.52,
+        "end": 177.52,
+        "text": " in one unit which does the whole thing in one sweep."
+      },
+      {
+        "id": "s50",
+        "start": 177.62,
+        "end": 179.92,
+        "text": " So it seemed like it was a good idea to make one."
+      },
+      {
+        "id": "s51",
+        "start": 181.9,
+        "end": 182.73999,
+        "text": " And I'm still not sure."
+      },
+      {
+        "id": "s52",
+        "start": 182.73999,
+        "end": 184.5,
+        "text": " I mean, I think I probably know how to fix this."
+      },
+      {
+        "id": "s53",
+        "start": 184.5,
+        "end": 186.51999,
+        "text": " I can probably rebuild it better"
+      },
+      {
+        "id": "s54",
+        "start": 186.51999,
+        "end": 188.12,
+        "text": " so it doesn't have such noise."
+      },
+      {
+        "id": "s55",
+        "start": 188.95999,
+        "end": 191.45999,
+        "text": " Well, ultimately we're gonna need to build one anyway."
+      },
+      {
+        "id": "s56",
+        "start": 191.45999,
+        "end": 192.3,
+        "text": " Are we?"
+      },
+      {
+        "id": "s57",
+        "start": 192.3,
+        "end": 194.5,
+        "text": " Sure, because we're gonna have to put it in a PDA."
+      },
+      {
+        "id": "s58",
+        "start": 196,
+        "end": 196.84,
+        "text": " Well."
+      },
+      {
+        "id": "s59",
+        "start": 197.84,
+        "end": 199.42,
+        "text": " If we have microphones in a PDA,"
+      },
+      {
+        "id": "s60",
+        "start": 199.42,
+        "end": 202.6,
+        "text": " it's gonna need bias and a preamp."
+      },
+      {
+        "id": "s61",
+        "start": 202.6,
+        "end": 204.98,
+        "text": " I guess I sort of figured that Jim would do that"
+      },
+      {
+        "id": "s62",
+        "start": 204.98,
+        "end": 206.12,
+        "text": " at some point."
+      },
+      {
+        "id": "s63",
+        "start": 206.12,
+        "end": 206.95999,
+        "text": " Yeah."
+      },
+      {
+        "id": "s64",
+        "start": 211.72,
+        "end": 212.92,
+        "text": " Jim is busy at the moment, that's the problem."
+      },
+      {
+        "id": "s65",
+        "start": 212.92,
+        "end": 215.2,
+        "text": " I was kind of hoping that Jim was gonna build this box."
+      },
+      {
+        "id": "s66",
+        "start": 215.2,
+        "end": 216.04001,
+        "text": " Yeah."
+      },
+      {
+        "id": "s67",
+        "start": 216.04001,
+        "end": 217.82,
+        "text": " But he hasn't had time."
+      },
+      {
+        "id": "s68",
+        "start": 217.82,
+        "end": 220.07999,
+        "text": " I think he is quite interested in doing it."
+      },
+      {
+        "id": "s69",
+        "start": 220.07999,
+        "end": 223.95999,
+        "text": " Okay, well, if it's too noisy"
+      },
+      {
+        "id": "s70",
+        "start": 223.95999,
+        "end": 225.18,
+        "text": " and if there's something we can buy,"
+      },
+      {
+        "id": "s71",
+        "start": 225.18,
+        "end": 226.98,
+        "text": " again, for a moderate amount of price,"
+      },
+      {
+        "id": "s72",
+        "start": 226.98,
+        "end": 228.82,
+        "text": " even if it takes a couple of lots or something,"
+      },
+      {
+        "id": "s73",
+        "start": 228.82,
+        "end": 235.82,
+        "text": " maybe we should just do it and then later we can replace it with, because there may"
+      },
+      {
+        "id": "s74",
+        "start": 235.82,
+        "end": 240,
+        "text": " be other considerations that will go into the design, are getting some experience with"
+      }
+    ],
+    "duration": 239.99999948800001,
+    "warnings": []
+  },
+  "refined": {
+    "text": " and run them up through the center so that wires aren't,  people aren't tripping over the wires and so on.  Are we going to, I mean, is it going to be over there  or is it going to be in there?  It's going to, it's, for reasons,  because of the microphone runs, we want that chunk there.  There's more equipment in there.  Right.  But the idea is that there are these microphones on the table.  There are some cables coming down under a nice mat.  And then that's, a bunch of them get sort  of converted digital there.  And the idea is that this gets replaced by a cabinet with doors so that it's not open to fiddling.  So that's what's going to happen.  Right.  Do we have, like, a cabinet on order, or do we just need to do that?  We need to do that.  It's on the list of things to do.  I keep on hoping that they're going to get done, but they don't.  Well, I can help them get done.  One question is budget.  do we have any money at all that we can go out and spend on things like cabinets or a hard drive or things like that?  I mean, I don't know.  Did we spend the budget already that we had?  Yeah.  How much are we talking about?  I don't know.  A cabinet is probably going to cost $100, $200, something like that.  Yeah, we can spend under $1,000 or something.  I'm not worrying about it.  I think I'm more worried about things being kept in a funky state long enough that that stuff gets broken.  Well, I think our intention at this point is when we're not using it to record a meeting,  we'll coil them all up and put them under so that people will not be tripping over them and so on.  We should get to a nice kind of working state of a setup as quickly as possible.  Yeah, and there's also the minor matter.  it would be kind of nice to be able to bring people in  and say, yes, this is where we do such and such.  And they be able to see it Yeah I mean it less important than doing what we doing right now Yeah So I mean there one big issue with the equipment still which is ultimately we can the idea  is to have any number of these wired headsets, but there's this amplification problem.  I built this thing.  It's very noisy.  We're actually recording.  I'm going through it at the moment, but it's so noisy that I'm not using it for this.  was designed to be used for the desktop media as well but i'm using running that through my  damp machine as a preamp as an alternative well we should be able to just go buy some preamps  yeah it's just you see how clumsy this is right i have to use these batteries to bias them and i'm  only getting two channels and they're a bunch of they're like three connectors in the circuit the  thing is like it's it's not it's not that the thing doesn't exist commercially but there isn't  in one unit which does the whole thing in one sweep.  So it seemed like it was a good idea to make one.  And I'm still not sure.  I mean, I think I probably know how to fix this.  I can probably rebuild it better  so it doesn't have such noise.  Well, ultimately we're gonna need to build one anyway.  Are we?  Sure, because we're gonna have to put it in a PDA.  Well.  If we have microphones in a PDA,  it's gonna need bias and a preamp.  I guess I sort of figured that Jim would do that  at some point.  Yeah.  Jim is busy at the moment, that's the problem.  I was kind of hoping that Jim was gonna build this box.  Yeah.  But he hasn't had time.  I think he is quite interested in doing it.  Okay, well, if it's too noisy  and if there's something we can buy,  again, for a moderate amount of price,  even if it takes a couple of lots or something,  maybe we should just do it and then later we can replace it with, because there may  be other considerations that will go into the design, are getting some experience with",
+    "segments": [
+      {
+        "id": "s1",
+        "start": 0,
+        "end": 3.24,
+        "text": " and run them up through the center so that wires aren't,"
+      },
+      {
+        "id": "s2",
+        "start": 3.24,
+        "end": 5.46,
+        "text": " people aren't tripping over the wires and so on."
+      },
+      {
+        "id": "s3",
+        "start": 5.46,
+        "end": 6.96,
+        "text": " Are we going to, I mean, is it going to be over there"
+      },
+      {
+        "id": "s4",
+        "start": 6.96,
+        "end": 8.9,
+        "text": " or is it going to be in there?"
+      },
+      {
+        "id": "s5",
+        "start": 8.9,
+        "end": 11.639999,
+        "text": " It's going to, it's, for reasons,"
+      },
+      {
+        "id": "s6",
+        "start": 11.639999,
+        "end": 14.54,
+        "text": " because of the microphone runs, we want that chunk there."
+      },
+      {
+        "id": "s7",
+        "start": 14.54,
+        "end": 15.759999,
+        "text": " There's more equipment in there."
+      },
+      {
+        "id": "s8",
+        "start": 15.759999,
+        "end": 17.06,
+        "text": " Right."
+      },
+      {
+        "id": "s9",
+        "start": 17.06,
+        "end": 19.5,
+        "text": " But the idea is that there are these microphones on the table."
+      },
+      {
+        "id": "s10",
+        "start": 19.5,
+        "end": 23.24,
+        "text": " There are some cables coming down under a nice mat."
+      },
+      {
+        "id": "s11",
+        "start": 23.24,
+        "end": 26.14,
+        "text": " And then that's, a bunch of them get sort"
+      },
+      {
+        "id": "s12",
+        "start": 26.14,
+        "end": 27.8,
+        "text": " of converted digital there."
+      },
+      {
+        "id": "s13",
+        "start": 27.8,
+        "end": 34.36,
+        "text": " And the idea is that this gets replaced by a cabinet with doors so that it's not open to fiddling."
+      },
+      {
+        "id": "s14",
+        "start": 35.62,
+        "end": 36.62,
+        "text": " So that's what's going to happen."
+      },
+      {
+        "id": "s15",
+        "start": 36.94,
+        "end": 37.1,
+        "text": " Right."
+      },
+      {
+        "id": "s16",
+        "start": 38.7,
+        "end": 42.68,
+        "text": " Do we have, like, a cabinet on order, or do we just need to do that?"
+      },
+      {
+        "id": "s17",
+        "start": 43.02,
+        "end": 43.84,
+        "text": " We need to do that."
+      },
+      {
+        "id": "s18",
+        "start": 43.92,
+        "end": 45.559998,
+        "text": " It's on the list of things to do."
+      },
+      {
+        "id": "s19",
+        "start": 45.879997,
+        "end": 49.239998,
+        "text": " I keep on hoping that they're going to get done, but they don't."
+      },
+      {
+        "id": "s20",
+        "start": 49.8,
+        "end": 52.62,
+        "text": " Well, I can help them get done."
+      },
+      {
+        "id": "s21",
+        "start": 53.02,
+        "end": 54.039997,
+        "text": " One question is budget."
+      },
+      {
+        "id": "s22",
+        "start": 54.039997,
+        "end": 59.679996,
+        "text": " do we have any money at all that we can go out and spend on things like cabinets or a hard drive or things like that?"
+      },
+      {
+        "id": "s23",
+        "start": 59.839996,
+        "end": 60.479996,
+        "text": " I mean, I don't know."
+      },
+      {
+        "id": "s24",
+        "start": 60.539997,
+        "end": 63.26,
+        "text": " Did we spend the budget already that we had?"
+      },
+      {
+        "id": "s25",
+        "start": 63.44,
+        "end": 63.739998,
+        "text": " Yeah."
+      },
+      {
+        "id": "s26",
+        "start": 66.619995,
+        "end": 68.34,
+        "text": " How much are we talking about?"
+      },
+      {
+        "id": "s27",
+        "start": 71.1,
+        "end": 74.06,
+        "text": " I don't know."
+      },
+      {
+        "id": "s28",
+        "start": 74.21999,
+        "end": 77.979996,
+        "text": " A cabinet is probably going to cost $100, $200, something like that."
+      },
+      {
+        "id": "s29",
+        "start": 78.14,
+        "end": 80.6,
+        "text": " Yeah, we can spend under $1,000 or something."
+      },
+      {
+        "id": "s30",
+        "start": 80.84,
+        "end": 81.78,
+        "text": " I'm not worrying about it."
+      },
+      {
+        "id": "s31",
+        "start": 81.78,
+        "end": 88.58,
+        "text": " I think I'm more worried about things being kept in a funky state long enough that that stuff gets broken."
+      },
+      {
+        "id": "s32",
+        "start": 90.58,
+        "end": 94.14,
+        "text": " Well, I think our intention at this point is when we're not using it to record a meeting,"
+      },
+      {
+        "id": "s33",
+        "start": 94.28,
+        "end": 99.119995,
+        "text": " we'll coil them all up and put them under so that people will not be tripping over them and so on."
+      },
+      {
+        "id": "s34",
+        "start": 101.54,
+        "end": 106.619995,
+        "text": " We should get to a nice kind of working state of a setup as quickly as possible."
+      },
+      {
+        "id": "s35",
+        "start": 106.7,
+        "end": 108.32,
+        "text": " Yeah, and there's also the minor matter."
+      },
+      {
+        "id": "s36",
+        "start": 108.32,
+        "end": 111.2,
+        "text": " it would be kind of nice to be able to bring people in"
+      },
+      {
+        "id": "s37",
+        "start": 111.2,
+        "end": 113.32,
+        "text": " and say, yes, this is where we do such and such."
+      },
+      {
+        "id": "s38",
+        "start": 113.32,
+        "end": 129.12,
+        "text": " And they be able to see it Yeah I mean it less important than doing what we doing right now Yeah So I mean there one big issue with the equipment still which is ultimately we can the idea"
+      },
+      {
+        "id": "s39",
+        "start": 129.12,
+        "end": 134.5,
+        "text": " is to have any number of these wired headsets, but there's this amplification problem."
+      },
+      {
+        "id": "s40",
+        "start": 134.5,
+        "end": 136.66,
+        "text": " I built this thing."
+      },
+      {
+        "id": "s41",
+        "start": 136.66,
+        "end": 137.66,
+        "text": " It's very noisy."
+      },
+      {
+        "id": "s42",
+        "start": 137.66,
+        "end": 138.66,
+        "text": " We're actually recording."
+      },
+      {
+        "id": "s43",
+        "start": 138.66,
+        "end": 142.76,
+        "text": " I'm going through it at the moment, but it's so noisy that I'm not using it for this."
+      },
+      {
+        "id": "s44",
+        "start": 142.76,
+        "end": 147.24,
+        "text": " was designed to be used for the desktop media as well but i'm using running that through my"
+      },
+      {
+        "id": "s45",
+        "start": 148.12,
+        "end": 153.56,
+        "text": " damp machine as a preamp as an alternative well we should be able to just go buy some preamps"
+      },
+      {
+        "id": "s46",
+        "start": 154.92,
+        "end": 161.4,
+        "text": " yeah it's just you see how clumsy this is right i have to use these batteries to bias them and i'm"
+      },
+      {
+        "id": "s47",
+        "start": 161.4,
+        "end": 165.56,
+        "text": " only getting two channels and they're a bunch of they're like three connectors in the circuit the"
+      },
+      {
+        "id": "s48",
+        "start": 165.56,
+        "end": 172.52,
+        "text": " thing is like it's it's not it's not that the thing doesn't exist commercially but there isn't"
+      },
+      {
+        "id": "s49",
+        "start": 172.52,
+        "end": 177.52,
+        "text": " in one unit which does the whole thing in one sweep."
+      },
+      {
+        "id": "s50",
+        "start": 177.62,
+        "end": 179.92,
+        "text": " So it seemed like it was a good idea to make one."
+      },
+      {
+        "id": "s51",
+        "start": 181.9,
+        "end": 182.73999,
+        "text": " And I'm still not sure."
+      },
+      {
+        "id": "s52",
+        "start": 182.73999,
+        "end": 184.5,
+        "text": " I mean, I think I probably know how to fix this."
+      },
+      {
+        "id": "s53",
+        "start": 184.5,
+        "end": 186.51999,
+        "text": " I can probably rebuild it better"
+      },
+      {
+        "id": "s54",
+        "start": 186.51999,
+        "end": 188.12,
+        "text": " so it doesn't have such noise."
+      },
+      {
+        "id": "s55",
+        "start": 188.95999,
+        "end": 191.45999,
+        "text": " Well, ultimately we're gonna need to build one anyway."
+      },
+      {
+        "id": "s56",
+        "start": 191.45999,
+        "end": 192.3,
+        "text": " Are we?"
+      },
+      {
+        "id": "s57",
+        "start": 192.3,
+        "end": 194.5,
+        "text": " Sure, because we're gonna have to put it in a PDA."
+      },
+      {
+        "id": "s58",
+        "start": 196,
+        "end": 196.84,
+        "text": " Well."
+      },
+      {
+        "id": "s59",
+        "start": 197.84,
+        "end": 199.42,
+        "text": " If we have microphones in a PDA,"
+      },
+      {
+        "id": "s60",
+        "start": 199.42,
+        "end": 202.6,
+        "text": " it's gonna need bias and a preamp."
+      },
+      {
+        "id": "s61",
+        "start": 202.6,
+        "end": 204.98,
+        "text": " I guess I sort of figured that Jim would do that"
+      },
+      {
+        "id": "s62",
+        "start": 204.98,
+        "end": 206.12,
+        "text": " at some point."
+      },
+      {
+        "id": "s63",
+        "start": 206.12,
+        "end": 206.95999,
+        "text": " Yeah."
+      },
+      {
+        "id": "s64",
+        "start": 211.72,
+        "end": 212.92,
+        "text": " Jim is busy at the moment, that's the problem."
+      },
+      {
+        "id": "s65",
+        "start": 212.92,
+        "end": 215.2,
+        "text": " I was kind of hoping that Jim was gonna build this box."
+      },
+      {
+        "id": "s66",
+        "start": 215.2,
+        "end": 216.04001,
+        "text": " Yeah."
+      },
+      {
+        "id": "s67",
+        "start": 216.04001,
+        "end": 217.82,
+        "text": " But he hasn't had time."
+      },
+      {
+        "id": "s68",
+        "start": 217.82,
+        "end": 220.07999,
+        "text": " I think he is quite interested in doing it."
+      },
+      {
+        "id": "s69",
+        "start": 220.07999,
+        "end": 223.95999,
+        "text": " Okay, well, if it's too noisy"
+      },
+      {
+        "id": "s70",
+        "start": 223.95999,
+        "end": 225.18,
+        "text": " and if there's something we can buy,"
+      },
+      {
+        "id": "s71",
+        "start": 225.18,
+        "end": 226.98,
+        "text": " again, for a moderate amount of price,"
+      },
+      {
+        "id": "s72",
+        "start": 226.98,
+        "end": 228.82,
+        "text": " even if it takes a couple of lots or something,"
+      },
+      {
+        "id": "s73",
+        "start": 228.82,
+        "end": 235.82,
+        "text": " maybe we should just do it and then later we can replace it with, because there may"
+      },
+      {
+        "id": "s74",
+        "start": 235.82,
+        "end": 240,
+        "text": " be other considerations that will go into the design, are getting some experience with"
+      }
+    ],
+    "duration": 239.99999948800001,
+    "warnings": []
+  },
+  "corrections": [],
+  "record": {
+    "title": "Cable Management, Cabinet Procurement, and Audio Preamp Discussion",
+    "summary": [
+      "Need to tidy cable layout and place cables under a mat to avoid tripping hazards.",
+      "Decision to acquire a cabinet for the equipment; no owner assigned yet.",
+      "Budget availability for cabinet and other hardware is uncertain; no clear answer on available funds.",
+      "Goal to have a quick, tidy setup for meetings and ability to demonstrate the setup to visitors.",
+      "Current preamp prototype is noisy; discussion about building a dedicated preamp box or buying a preamp, with no assigned owner."
+    ],
+    "minutes": [
+      {
+        "topic": "Cable Management and Cabinet",
+        "points": [
+          "Discussed routing cables centrally and keeping them off the floor to prevent trips.",
+          "Need for a cabinet to house equipment and protect it from tampering.",
+          "Question raised about whether a cabinet is already ordered; response: it is needed and on the to‑do list."
+        ]
+      },
+      {
+        "topic": "Budget and Cost",
+        "points": [
+          "Raised question about available budget for cabinets, hard drives, etc.; response: unknown.",
+          "Confirmed that previous budget may have been spent.",
+          "Estimated cabinet cost around $100‑$200, with a possible spend under $1,000."
+        ]
+      },
+      {
+        "topic": "Setup Tidiness and Demonstration",
+        "points": [
+          "Goal to coil cables after meetings and store them under a mat to keep the area tidy.",
+          "Desire to have a functional, tidy setup quickly for meetings.",
+          "Minor desire to have a setup that can be shown to visitors as a demonstration."
+        ]
+      },
+      {
+        "topic": "Audio Preamp Design and Implementation",
+        "points": [
+          "Current prototype for wired headsets is noisy and not suitable for use.",
+          "Discussion about the need for a preamp and bias for headsets in a PDA setup.",
+          "Consideration of building a custom preamp box versus purchasing a preamp; no decision made.",
+          "Mentioned that Jim might build the box but is currently busy; no firm assignment."
+        ]
+      }
+    ],
+    "decisions": [],
+    "tasks": [],
+    "openQuestions": [
+      "Do we have any budget available to spend on a cabinet or other hardware?",
+      "Has the existing budget already been spent?",
+      "How much money is available for these purchases?",
+      "Proposed work (not agreed): Acquire a cabinet for the equipment and install it to enclose cables and devices.",
+      "Proposed work (not agreed): Develop or acquire a preamp solution for wired headsets (build a custom box or purchase a preamp)."
+    ]
+  },
+  "warnings": []
+}

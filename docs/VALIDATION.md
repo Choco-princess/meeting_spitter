@@ -5,7 +5,7 @@ Date: 8 October 2026 (IST). Scope: initial hackathon submission.
 ## Completed checks
 
 - TypeScript typecheck and Vite production build: passed.
-- 18 deterministic Vitest tests: passed. They cover ordered stages, raw preservation, exact-span patch application, overlap/ambiguity handling, reference cleanup, null field exports, CORS/input handling, partial-result recovery, cancellation, Retry-After handling and daily-quota behavior.
+- 19 deterministic Vitest tests: passed. They cover ordered stages, raw preservation, exact-span patch application, overlap/ambiguity/no-op handling, reference cleanup, ownership/candidate classification, null field exports, CORS/input handling, partial-result recovery, cancellation, Retry-After handling and daily-quota behavior.
 - Dependency audit: no reported vulnerabilities after updating development dependencies.
 - Deployed Cloudflare API: actual Whisper transcription and both language-model stages returned successful results.
 - Browser end-to-end run: sample audio loaded and processed; all result tabs rendered; TXT, Markdown, JSON and ZIP downloads succeeded; no uncaught page errors.
@@ -30,6 +30,6 @@ The synthetic audio includes 30 versus 13 seconds, a $500 budget, a postponed pu
 
 ## Practical limits
 
-No claim of zero hallucinations, benchmark-level accuracy, correct speaker diarization, unlimited recording length or unlimited concurrent usage. The sample is synthetic and clear; real noisy/multi-speaker meetings have not been benchmarked. The app relies on free shared quotas, and completed progress is in-memory only. Maximum audio file size is 24 MiB; maximum transcript input to the language stages is 14,000 characters.
+No claim of zero hallucinations, benchmark-level accuracy, correct speaker diarization, unlimited recording length or unlimited concurrent usage. A small real-meeting evaluation is recorded in `REAL_TESTS.md`; it includes remaining errors and omissions and is not a benchmark. The app relies on free shared quotas, and completed progress is in-memory only. Maximum audio file size is 24 MiB; maximum transcript input to the language stages is 14,000 characters.
 
 See `demo.webm` for the captured end-to-end workflow and `samples/` for its downloadable outputs. Generated content can differ between runs even at low temperature.

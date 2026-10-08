@@ -1,0 +1,175 @@
+[0.0s] I'm not sure if we can do automated alignment or not.
+
+[5.2s] I mean, especially with speaker change in a meeting like this where we're overlapping
+
+[10.1s] so much, I don't think we're going to have a prayer.
+
+[13.2s] Well, to get the actual transcript, I think we'll do okay because of the separate
+
+[19.5s] channels.
+
+[20.5s] Oh, that's true.
+
+[21.5s] Right.
+
+[22.5s] We could just do it through these.
+
+[23.5s] Right.
+
+[24.5s] I hadn't even thought about that.
+
+[25.5s] Sure.
+
+[26.5s] data formats, what I did for the digit stuff was just
+
+[30.5s] hand-rolled my own that looks like this form.
+
+[33.8s] It's just something that's easy to parse in Perl.
+
+[37.0s] Probably for the full one, we'll want to do
+
+[40.0s] something like STM.
+
+[42.7s] Some format that our tools already work with.
+
+[44.6s] Well, yes.
+
+[47.9s] Although that might, presumably we'll have one,
+
+[50.2s] we'll have several formats which you can interconvert
+
+[52.5s] between one more to do recognition and STM.
+
+[55.3s] but if we're, rather than, rather than design our own format, we'll just take whatever comes
+
+[60.2s] out of the tools that we can find to use.
+
+[62.0s] I guess that's true.
+
+[63.9s] I've got no idea.
+
+[67.2s] Well, I know that, I know that the Mississippi State tools, at least what they produce, does
+
+[73.9s] not come out in STM format.
+
+[76.0s] They, they basically give, they subdivide into WAV files, and then they give for each,
+
+[82.6s] they give a one, you know, a WAV file that indicates where the start and stop times are,
+
+[87.2s] and then give the, whatever, the sentence information.
+
+[93.8s] But, I mean, as you said, it was easy to convert back and forth between that file and STM format.
+
+[103.0s] In fact, what I did is I took the Mississippi State data and just made STM files out of it.
+
+[108.6s] Okay, good.
+
+[110.0s] Okay, I made market framework, okay.
+
+[112.6s] Especially if coding workbench.
+
+[115.1s] Okay This one I think and then back in here Oh no it has the word XML in it Oh good It must be fundable then Oh it looks like work packages
+
+[127.5s] It must be a European project.
+
+[129.5s] Yeah, it is European. Both of these are European,
+
+[131.5s] but they have American contributions and stuff.
+
+[134.0s] Oh, so they're using the Alembic workbench from MITRE.
+
+[137.0s] Alembic?
+
+[138.0s] I guess.
+
+[139.0s] Is that free?
+
+[140.0s] I don't know.
+
+[141.0s] But you see, they have a whole bunch of things.
+
+[142.0s] What they're doing is trying to bring together,
+
+[144.0s] And they rate things.
+
+[145.0s] I wasn't focused on that, so I didn't.
+
+[146.5s] Let me show you.
+
+[147.3s] Have you seen this one, Dan?
+
+[148.9s] No.
+
+[149.1s] I'm trying to get one for you, too.
+
+[151.3s] There you go.
+
+[151.8s] What are you looking at here?
+
+[153.3s] He's got the markup framework.
+
+[154.9s] Oh, yeah.
+
+[155.4s] Different coding schemes.
+
+[156.0s] But it doesn't have enough pictures, so I think it will require too much reading to understand whether this is anything.
+
+[161.5s] They're reviewing it.
+
+[162.3s] It can easily use.
+
+[163.2s] What they're doing is they're comparing all these existing things that have been submitted.
+
+[167.7s] I see.
+
+[168.1s] This one includes the TEI.
+
+[170.0s] and so it's a pretty broad base.
+
+[175.4s] TEI is?
+
+[176.5s] That's the Text Encoding Initiative.
+
+[178.3s] Ah.
+
+[179.4s] That's a way of markup, so, you know,
+
+[181.5s] but focus on tools to do this stuff.
+
+[185.0s] I do have a file also in addition to those things,
+
+[187.1s] but take me just a second here.
+
+[189.7s] I guess XML makes some amount of sense.
+
+[191.7s] I'm not actually familiar with it,
+
+[193.2s] but it seems to be the sort of thing
+
+[196.0s] that this would be good for.
+
+[197.6s] If you start with a basic transcription and a good filter,
+
+[202.9s] that's sort of my feeling about that.
+
+[204.9s] You should be able to translate between an XML and a non-XML version.
+
+[209.8s] At least with a focus on discourse, mostly.
+
+[213.3s] Oh, I wanted to...
+
+[215.0s] This approach here, this is Uli Heid from Stuttgart,
+
+[218.5s] is query language for research in phonetics
+
+[221.0s] where he wants to build in Tobii tags so you can determine...
+
+[225.8s] I wanted to mention this to you.
+
+[227.4s] I was going to come by and ask you about this.
+
+[229.3s] Do you know about the Stuttgart people?
+
+[233.3s] Because he's saying if you represent,
+
+[236.2s] he says that in German, selbst is used in two different ways.

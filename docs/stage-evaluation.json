@@ -1,0 +1,293 @@
+{
+  "date": "2026-10-08T16:16:20.056Z",
+  "promptVersion": "1.3",
+  "outputs": [
+    {
+      "name": "terminology-with-negation-and-numbers",
+      "stage": "refinement",
+      "input": {
+        "text": "Use cube ernetes. Timeout is 30 seconds, not 13. Maya has not approved release.",
+        "duration": 15,
+        "warnings": [],
+        "segments": [
+          {
+            "id": "s1",
+            "start": 0,
+            "end": 15,
+            "text": "Use cube ernetes. Timeout is 30 seconds, not 13. Maya has not approved release."
+          }
+        ]
+      },
+      "output": {
+        "transcript": {
+          "text": "Use Kubernetes. Timeout is 30 seconds, not 13. Maya has not approved release.",
+          "duration": 15,
+          "warnings": [],
+          "segments": [
+            {
+              "id": "s1",
+              "start": 0,
+              "end": 15,
+              "text": "Use Kubernetes. Timeout is 30 seconds, not 13. Maya has not approved release."
+            }
+          ]
+        },
+        "corrections": [
+          {
+            "segmentId": "s1",
+            "original": "cube ernetes",
+            "replacement": "Kubernetes",
+            "reason": "Corrected misspelling of the Kubernetes term.",
+            "applied": true
+          }
+        ]
+      },
+      "pass": true
+    },
+    {
+      "name": "proposal-only",
+      "stage": "record",
+      "input": "Maybe we should migrate to PostgreSQL. We have not decided to migrate. No action items were agreed.",
+      "output": {
+        "record": {
+          "title": "PostgreSQL Migration Discussion",
+          "summary": [
+            "Consideration of migrating to PostgreSQL was raised but no decision was made."
+          ],
+          "minutes": [
+            {
+              "topic": "PostgreSQL migration",
+              "points": [
+                "Suggestion to migrate to PostgreSQL was mentioned.",
+                "The group stated that no decision to migrate has been made."
+              ]
+            }
+          ],
+          "openQuestions": [
+            "Migrate to PostgreSQL"
+          ],
+          "decisions": [],
+          "tasks": []
+        },
+        "warnings": []
+      },
+      "pass": true
+    },
+    {
+      "name": "cancelled-task",
+      "stage": "record",
+      "input": "Nora says: I will send the report by Monday. Later Nora says: Cancel my report task; we no longer need it. Everyone agrees to cancel it.",
+      "output": {
+        "record": {
+          "title": "Report Task Discussion",
+          "summary": [
+            "Nora initially committed to send the report by Monday.",
+            "The report task was cancelled by Nora and the cancellation was agreed by all participants."
+          ],
+          "minutes": [
+            {
+              "topic": "Report task",
+              "points": [
+                "Nora said she would send the report by Monday.",
+                "Later Nora cancelled the report task, stating it was no longer needed.",
+                "Everyone agreed to cancel the report task."
+              ]
+            }
+          ],
+          "openQuestions": [],
+          "decisions": [
+            {
+              "text": "Cancel the report task; we no longer need it.",
+              "sourceIds": [
+                "s1"
+              ]
+            }
+          ],
+          "tasks": []
+        },
+        "warnings": []
+      },
+      "pass": true
+    },
+    {
+      "name": "unassigned-agreed-work",
+      "stage": "record",
+      "input": "We agree to update the installation guide. We have not chosen who will do it or when.",
+      "output": {
+        "record": {
+          "title": "Installation Guide Update Meeting",
+          "summary": [
+            "Decision made to update the installation guide.",
+            "Owner and timeline for the update have not been assigned."
+          ],
+          "minutes": [
+            {
+              "topic": "Installation Guide",
+              "points": [
+                "Agreement to update the installation guide.",
+                "No owner or deadline has been chosen."
+              ]
+            }
+          ],
+          "openQuestions": [],
+          "decisions": [
+            {
+              "text": "Update the installation guide",
+              "sourceIds": [
+                "s1"
+              ]
+            }
+          ],
+          "tasks": [
+            {
+              "description": "Update the installation guide",
+              "owner": null,
+              "deadline": null,
+              "sourceIds": [
+                "s1"
+              ]
+            }
+          ]
+        },
+        "warnings": []
+      },
+      "pass": true
+    },
+    {
+      "name": "question-is-not-task",
+      "stage": "record",
+      "input": "Is the Alembic tool free? I don't know. Can we align overlapping speech? We are not sure. Nobody proposed any follow-up work.",
+      "output": {
+        "record": {
+          "title": "Alembic tool cost and speech alignment discussion",
+          "summary": [
+            "Uncertainty expressed about whether the Alembic tool is free.",
+            "Question raised about aligning overlapping speech.",
+            "No follow‑up work was proposed."
+          ],
+          "minutes": [
+            {
+              "topic": "Tool cost and speech alignment",
+              "points": [
+                "Is the Alembic tool free? – speaker expressed uncertainty.",
+                "Can we align overlapping speech? – question raised without resolution."
+              ]
+            }
+          ],
+          "openQuestions": [
+            "Is the Alembic tool free?",
+            "Can we align overlapping speech?"
+          ],
+          "decisions": [],
+          "tasks": []
+        },
+        "warnings": []
+      },
+      "pass": true
+    },
+    {
+      "name": "nearby-name-is-not-owner",
+      "stage": "record",
+      "input": "Jason has a question. I will demo the large cluster in two weeks. This audio has no speaker labels and the person making the commitment is unidentified.",
+      "output": {
+        "record": {
+          "title": "Demo Commitment Meeting",
+          "summary": [
+            "Unidentified speaker commits to demo the large cluster in two weeks.",
+            "Jason has a question (unspecified)."
+          ],
+          "minutes": [
+            {
+              "topic": "Demo Commitment",
+              "points": [
+                "Unidentified speaker commits to demo the large cluster in two weeks.",
+                "Jason has a question (no details provided)."
+              ]
+            }
+          ],
+          "openQuestions": [
+            "Jason has a question."
+          ],
+          "decisions": [],
+          "tasks": [
+            {
+              "description": "Demo the large cluster",
+              "owner": null,
+              "deadline": "in two weeks",
+              "sourceIds": [
+                "s1"
+              ]
+            }
+          ]
+        },
+        "warnings": []
+      },
+      "pass": true
+    },
+    {
+      "name": "later-recap-resolves-owner",
+      "stage": "record",
+      "input": "I will update the guide by Friday. I will review the retry logic. Recap: Leo owns the deployment guide due Friday. Priya will review the retry logic without a fixed deadline.",
+      "output": {
+        "record": {
+          "title": "Deployment Guide and Retry Logic Review",
+          "summary": [
+            "Update the deployment guide by Friday (unidentified speaker).",
+            "Review the retry logic (unidentified speaker).",
+            "Leo assigned to own the deployment guide, due Friday.",
+            "Priya assigned to review the retry logic (no deadline)."
+          ],
+          "minutes": [
+            {
+              "topic": "Task assignments",
+              "points": [
+                "Unidentified speaker will update the deployment guide by Friday.",
+                "Unidentified speaker will review the retry logic.",
+                "Leo owns the deployment guide, due Friday.",
+                "Priya will review the retry logic without a fixed deadline."
+              ]
+            }
+          ],
+          "openQuestions": [],
+          "decisions": [],
+          "tasks": [
+            {
+              "description": "Update the deployment guide",
+              "owner": null,
+              "deadline": "Friday",
+              "sourceIds": [
+                "s1"
+              ]
+            },
+            {
+              "description": "Review the retry logic",
+              "owner": null,
+              "deadline": null,
+              "sourceIds": [
+                "s1"
+              ]
+            },
+            {
+              "description": "Deployment guide",
+              "owner": "Leo",
+              "deadline": "Friday",
+              "sourceIds": [
+                "s1"
+              ]
+            },
+            {
+              "description": "Review the retry logic",
+              "owner": "Priya",
+              "deadline": null,
+              "sourceIds": [
+                "s1"
+              ]
+            }
+          ]
+        },
+        "warnings": []
+      },
+      "pass": true
+    }
+  ]
+}

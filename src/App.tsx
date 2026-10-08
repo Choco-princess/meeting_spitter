@@ -50,6 +50,7 @@ export default function App() {
   const [drag, setDrag] = useState(false);
   const [loadingSample, setLoadingSample] = useState(false);
   const [duration, setDuration] = useState(0);
+  const [copyStatus, setCopyStatus] = useState("");
   const fileInput = useRef<HTMLInputElement>(null);
   const audio = useRef<HTMLAudioElement>(null);
   const controller = useRef<AbortController | undefined>(undefined);
@@ -83,6 +84,7 @@ export default function App() {
     setResult(undefined);
     resultRef.current = undefined;
     setDuration(0);
+    setCopyStatus("");
     setTab("minutes");
     try {
       validateFile(f);
@@ -220,6 +222,15 @@ export default function App() {
     if (result.refined)
       files["refined-transcript.txt"] = strToU8(transcriptText(result.refined));
     download("meeting-spitter-results.zip", zipSync(files), "application/zip");
+  }
+  async function copyMinutes() {
+    if (!result?.record) return;
+    try {
+      await navigator.clipboard.writeText(markdown(result));
+      setCopyStatus("Minutes copied.");
+    } catch {
+      setCopyStatus("Clipboard unavailable. Use Minutes MD to download them.");
+    }
   }
   const complete = !!result?.record;
   const active = steps.findIndex((s) => s.key === stage);
@@ -661,6 +672,9 @@ export default function App() {
                     Download all ↓
                   </button>
                   <div className="individual-downloads">
+                    <button disabled={!result.record} onClick={copyMinutes}>
+                      Copy minutes
+                    </button>
                     <button
                       onClick={() =>
                         download(
@@ -708,6 +722,7 @@ export default function App() {
                       Record JSON
                     </button>
                   </div>
+                  {copyStatus && <small role="status">{copyStatus}</small>}
                 </footer>
               </>
             )}

@@ -1,6 +1,7 @@
 import { z } from "zod";
 import {
   MODELS,
+  PROMPT_VERSION,
   MAX_AUDIO_BYTES,
   MAX_TRANSCRIPT_CHARS,
   SegmentSchema,
@@ -118,7 +119,7 @@ async function structured<T>(
         model,
         messages,
         temperature: 0.1,
-        reasoning_effort: "low",
+        reasoning_effort: model === MODELS.record ? "medium" : "low",
         max_completion_tokens: 3000,
         response_format: {
           type: "json_schema",
@@ -158,6 +159,7 @@ async function handle(request: Request, env: Env) {
     return json({
       ready: !!env.GROQ_API_KEY && env.SERVICE_ENABLED !== "false",
       models: MODELS,
+      promptVersion: PROMPT_VERSION,
       maxAudioBytes: MAX_AUDIO_BYTES,
       maxTranscriptChars: MAX_TRANSCRIPT_CHARS,
     });
