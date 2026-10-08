@@ -1,103 +1,124 @@
+**[Open the live app →](https://choco-princess.github.io/meeting_spitter/)** · No installation or API key required for the demo.
+
 # meeting_spitter
 
-A meeting assistant that turns English audio into a raw transcript, a refined transcript, organized minutes, decisions and action items. Built incrementally for the IIT Guwahati ML bootcamp problem statement.
+**Spill the meeting. Keep the receipts.**
 
-**Live app:** https://choco-princess.github.io/meeting_spitter/
+Turn English audio into transcripts, readable minutes, decisions and action items. Built by **Banana_Shake** for the IITG Techboard problem statement, prioritizing correctness and a smooth, free demo.
 
-## Use it
+## Features
 
-1. Upload audio or choose **Try a sample meeting**. The bundled sample is clearly synthetic, generated with Windows speech synthesis from an original fictional meeting script.
-2. Optionally enter spellings of names and technical terms.
-3. For a long WAV/MP3, optionally select **Process only the first 3 minutes**. It trims locally and uploads a small mono WAV, with explicit excerpt notices. Larger originals never bypass the 24 MiB upload cap.
-4. Choose **Quick recap**, **Standard**, **Detailed** (default), or **Full notes**. Extra accuracy review is enabled by default; it checks the draft against the transcript and uses more free quota.
-5. Select **Spit the minutes**. All three stages run in order, including the optional corrective pass in the minutes stage.
-6. Inspect minutes, decisions/tasks and both transcripts. Source timestamps play the corresponding original audio. Change the detail level and select **Update minutes** to reuse the existing transcripts.
-7. Copy the minutes or download ZIP, TXT, Markdown or JSON. Excerpt scope is included in every export.
+- Timestamped raw transcripts with playback links to original audio.
+- Separate terminology refinement, visible corrections and preserved original text.
+- Topic-organized minutes, decisions, action items and unresolved questions.
+- Four detail levels: **Quick recap**, **Standard**, **Detailed**, **Full notes**.
+- Optional extra accuracy review, enabled by default, checking the draft against the transcript.
+- Unknown owners/deadlines stay unspecified; proposals are separated from agreed decisions.
+- **First 3 minutes** mode for large WAV/MP3 files, with explicit scope notices.
+- Copy minutes or download TXT, Markdown, JSON and ZIP.
+- Cancel, retry completed stages and change detail without repeating transcription.
+- A clearly labeled synthetic sample to try the workflow.
 
-Judges do not need an API key. The shared Groq key is stored as a Cloudflare Worker secret, never in the frontend. The developer's laptop does not need to be running.
+## How to use it
 
-## Models and workflow
+1. Upload audio or choose **Try a sample meeting**.
+2. Optionally supply names and technical terms as context.
+3. For a large WAV/MP3, enable **Process only the first 3 minutes**. Later discussion is excluded.
+4. Choose detail. **Detailed** and **Extra accuracy review** are the defaults.
+5. Click **Spit the minutes** and follow the three stages.
+6. Review notes and decisions/tasks. Use timestamps to check audio and inspect both transcripts.
+7. Download results. Change detail and click **Update minutes** to reuse transcription.
 
-| Stage | Model (via Groq) | Responsibility |
-|---|---|---|
-| Speech recognition | `whisper-large-v3` | English transcript with segment timestamps |
-| Terminology refinement | `openai/gpt-oss-20b` | Narrow, contextual correction proposals applied to original segments |
-| Meeting documentation | `openai/gpt-oss-120b`; free fallback `qwen/qwen3.8-27b` | Summary, topic-organized minutes, decisions, tasks and unresolved questions |
+If the service is busy, wait for the displayed retry time and retry the unfinished stage. If only extra review fails, the draft is retained: turn off extra review and choose **Update minutes** to use it without that additional check.
 
-The two language models are separate processing stages. Results are generated from the uploaded audio; the app does not return canned sample outputs. Groq's free plan and Cloudflare Workers Free are used. Shared quotas can cause delays or temporary unavailability; the app never switches to paid inference.
+## Architecture
 
-The browser orchestrates three API requests, plus an optional fourth corrective-review request, to a small Cloudflare Worker. The Worker fixes the model IDs and prompts, holds the credential, and validates requests. JSON Schema constrains the language-model output shape. This does **not** guarantee factual accuracy. Prompts live in `worker/prompts.ts`; schemas and correction/export logic live in `shared/schema.ts`.
+```mermaid
+flowchart LR
+    A[Browser: upload or local excerpt] --> B[Cloudflare Pages API gateway]
+    B --> C[Cloudflare Worker: validation and secret]
+    C --> D[Groq Whisper: timestamped transcript]
+    D --> E[Groq GPT-OSS 20B: terminology refinement]
+    E --> F[Groq GPT-OSS 120B: documentation]
+    F --> G[Optional accuracy review]
+    G --> H[Browser: inspect and export]
+```
 
-## Accuracy and limitations
+React and TypeScript run on GitHub Pages. The Worker keeps the shared Groq key out of the browser and validates requests and structured responses. The Pages gateway supplies the public API address. The developer's laptop does not need to stay on.
 
-- The raw transcript is preserved. Refinement applies short, non-overlapping patches with a visible change log.
-- Summaries may paraphrase. Missing owners/deadlines remain `null` in JSON and **Unspecified** in the interface/Markdown.
-- Prompts classify proposed versus established tasks and distinguish unresolved proposals from decisions. Named ownership is retained from explicit assignments or later recaps; nearby names do not identify unlabeled speakers. Supporting references aid review, not proof.
-- This is an AI-generated draft: unclear speech, speaker identity, names and contextual meaning can still be wrong. Review important details against the audio.
-- English audio: WAV, MP3, M4A, OGG, WebM, FLAC, up to **24 MiB**. Current whole-transcript processing limit is **14,000 characters**; longer transcripts are explicitly rejected after transcription, which remains downloadable. File size alone does not indicate meeting length.
-- First-three-minutes mode reads a bounded prefix from standard PCM/float WAV or MPEG Layer III MP3 (CBR/VBR, ID3), then resamples it locally to mono 16 kHz. Original recordings stay unchanged. Unfinalized WAV headers and cut MP3 frames are rejected. Other oversized formats, unusual WAV encodings and extreme multichannel/sample-rate recordings require a shorter export.
-- Detail levels change coverage, without forcing word counts or invented padding. The corrective pass keeps sound draft sections and changes only fields needing repair. It can still miss errors.
-- If the primary minutes model has exhausted its free daily quota, a distinct free Qwen model is used. Actual generation/review model IDs and a fallback notice are included in the results. There is no paid fallback.
-- There is no speaker diarization. Named attribution depends on what was actually stated and recognized.
-- Relative dates are kept verbatim, not resolved against the upload date.
-- Cancel/retry preserves completed stages in the open page. Reloading loses the current in-memory run. A provider request already accepted may finish after cancellation.
-- The app does not persist recordings or transcripts on its own servers. Audio/text pass through Cloudflare to Groq and are subject to those providers' policies.
-- The public shared API has per-IP rate limiting and fixed endpoints. CORS is not authentication; shared free quotas can still be exhausted.
-- The bundled demo is synthetic. Two natural research meetings and a public YouTube meeting were also tested; see `docs/REAL_TESTS.md` for remaining recognition errors and under-extraction.
+Refinement proposes narrow patches rather than replacing the raw transcript. Documentation generates notes and classifications; review repairs only fields needing changes. Schemas enforce structure, but factual accuracy still needs human review.
 
-## Local setup
+If the primary minutes model exhausts its free daily quota, a separate free `qwen/qwen3.8-27b` fallback is available. Actual model IDs and fallback warnings appear in results. No paid fallback is configured.
 
-Requires Node.js 22.12+ (tested on Node 24), npm, and a free Groq account.
+| Folder | Purpose |
+|---|---|
+| `src/` | Interface, audio excerpts and staged workflow |
+| `worker/` | Backend endpoints, provider calls and prompts |
+| `shared/` | Schemas, correction rules and exports |
+| `gateway/` | Pages gateway and service binding |
+| `public/` | Synthetic demo audio |
+| `samples/` | Original demo script |
+| `tests/` | Maintainable regression tests |
+| `scripts/` | Developer checks |
+| `docs/` | Technical report, validation and demo video |
+| `.github/` | Automated testing and deployment |
+
+Generated test records and user recordings are excluded from the current tree. Build configuration and dependency files stay at the root where tools expect them.
+
+## Limitations
+
+- AI drafts can contain recognition errors, incorrect names or attribution, and omissions. Source references help checking; they do not prove correctness.
+- English only. WAV, MP3, M4A, OGG, WebM and FLAC uploads up to **24 MiB**. Language stages accept at most **14,000 transcript characters**.
+- Excerpt mode supports standard PCM/float WAV and MPEG Layer III MP3. Corrupt files, unusual encodings and other oversized formats need a valid shorter export.
+- No automatic speaker diarization or Google Meet integration. Named attribution depends on the transcript.
+- Shared free quotas can delay or block requests. Daily replenishment does not remove per-minute limits. Restrictive output caps may make notes more compact than the selected tier; a warning explains this.
+- Detail levels and corrective review do not guarantee exhaustive coverage or zero hallucinations.
+- Progress stays in the open page; reloading loses the run. Cancellation cannot always stop provider work already accepted.
+- Audio/text pass through Cloudflare to Groq. This app does not persist them on its own backend.
+- The shared API is rate limited. CORS is not authentication; public access can exhaust quota.
+
+See [validation](docs/VALIDATION.md), [technical notes](docs/TECHNICAL.md) and the [technical report](docs/meeting-spitter-technical-report.pdf).
+
+## Future scope
+
+- Longer recordings through chunking and careful document merging.
+- Speaker-labeled Google Meet transcript import and optional diarization.
+- Stronger detail-level coverage checks and larger real-meeting evaluations.
+- User-supplied keys, abuse protection and clearer quota status.
+- Local/browser inference for privacy and less shared-quota dependence.
+- Editable minutes, persistent sessions and richer exports.
+
+These are planned improvements, not current features.
+
+## Run locally
+
+Requires Node.js 22.12+, npm and a Groq account with free quota.
 
 ```sh
 npm ci
 ```
 
-Create an ignored `.dev.vars` file:
-
-```dotenv
-GROQ_API_KEY=your_groq_key
-```
-
-In two terminals:
+Create an ignored `.dev.vars` containing `GROQ_API_KEY=your_groq_key`. Run these in separate terminals:
 
 ```sh
 npm run dev:api
 npm run dev
 ```
 
-Open the Vite address ending in `/meeting_spitter/`. The development frontend proxies `/api` to Wrangler on port 8787. No OpenAI API key is needed. Never add provider credentials to a `VITE_` variable: those variables are public.
-
-## Checks
+Open the Vite URL ending in `/meeting_spitter/`. Never put keys in `VITE_` variables; frontend variables are public.
 
 ```sh
 npm test
 npm run build
-npm audit
 ```
 
-The deterministic tests exercise patch safety, reference cleanup, export consistency, input validation and CORS. Live API and browser results are documented separately in `docs/VALIDATION.md`.
+Deployment instructions are in [technical notes](docs/TECHNICAL.md).
 
-## Deploy
+## Team and acknowledgements
 
-1. Use a free Cloudflare account, set `CLOUDFLARE_ACCOUNT_ID` and `CLOUDFLARE_API_TOKEN` locally, and edit allowed frontend origins in `wrangler.jsonc`.
-2. Run `npx wrangler secret put GROQ_API_KEY`, then `npm run deploy:api`.
-3. Create a Cloudflare Pages project named `meeting-spitter-api`, then deploy the gateway from its own directory: `cd gateway` and `npx wrangler pages deploy public --project-name meeting-spitter-api --branch main`. Its configuration binds `API` to the existing Worker; it holds no provider credential. This provides the currently reachable `meeting-spitter-api.pages.dev` API hostname.
-4. Set `VITE_API_BASE` to your public API URL at frontend build time (the current Pages gateway is the default). Build and deploy `dist` to GitHub Pages using the supplied workflow.
-5. For another repository name, update the Vite `base` path. Set GitHub Pages source to GitHub Actions.
+**Team Banana_Shake**
 
-`SERVICE_ENABLED=false` in the Worker configuration pauses the shared service. There is no automatic paid fallback.
+- Anay Gupta
+- Ajay Meena
 
-## Submission contents
-
-- Source, prompts, schemas, dependency lockfile and tests.
-- `samples/planning-meeting.wav`: original synthetic meeting audio; provenance in `samples/README.md`.
-- `samples/meeting-record.json`, Markdown and both transcripts: actual pipeline outputs.
-- `docs/TECHNICAL.md`: design and model roles.
-- `docs/VALIDATION.md`: completed checks and known limits.
-- `docs/demo.webm`: recorded end-to-end run on the public site, with matching exports in `samples/`.
-- `samples/latest/`: current synthetic postprocessing regression outputs; the original video and its matching outputs are retained separately.
-- `samples/real/`: two licensed natural-meeting clips, independent human references and generated outputs.
-- `docs/REAL_TESTS.md`, `docs/TEST_PLAN.md`, `docs/stage-evaluation.json`: real results, remaining limitations and separate stage checks.
-
-The unrelated ArUco/QR text in the supplied brief is treated as an editing artifact; this project implements the meeting-assistant requirements.
+Thank you to **IITG Techboard** for the problem statement and the opportunity to build meeting_spitter.

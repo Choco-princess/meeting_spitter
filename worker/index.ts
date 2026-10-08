@@ -32,6 +32,7 @@ class ApiError extends Error {
     message: string,
     public retryAfter?: string,
     public reduceTokensBy?: number,
+    public outputCap?: number,
   ) {
     super(message);
   }
@@ -76,6 +77,10 @@ async function groq(
       error?: { message?: string };
     };
     const message = payload.error?.message ?? "";
+    if (r.status === 429 && /request too large.*output tokens per minute/i.test(message)) {
+      const limit = Number(message.match(/Limit[:\s]+(\d+)/i)?.[1]);
+      throw new ApiError(413, "The free model's output allowance is too small for this request. Use a shorter excerpt or lower detail level.", undefined, undefined, limit > 0 ? Math.floor(limit * .9) : undefined);
+    }
     if (r.status === 429)
       throw new ApiError(
         429,
@@ -129,6 +134,7 @@ async function structured<T>(
   let budget = maxCompletionTokens;
   let adjusted = false;
   let activeModel = model;
+  let compactOutput = false;
   const warnings: string[] = [];
   for (let attempt = 0; attempt < 2; attempt++) {
     let response: any;
@@ -139,7 +145,7 @@ async function structured<T>(
         model: activeModel,
         messages,
         temperature: 0.1,
-        reasoning_effort: model === MODELS.record ? "medium" : "low",
+        reasoning_effort: compactOutput && activeModel === FALLBACK_RECORD_MODEL ? "none" : model === MODELS.record ? "medium" : "low",
         max_completion_tokens: budget,
         response_format: {
           type: "json_schema",
@@ -152,10 +158,16 @@ async function structured<T>(
       }),
       "application/json",
     ); } catch (error) {
+      if (error instanceof ApiError && error.outputCap && !compactOutput && error.outputCap >= 256) {
+        budget = Math.min(budget, error.outputCap); compactOutput = true;
+        warnings.push("The free model imposed a smaller output allowance. This run may be more compact than the selected detail level; shorter excerpts can yield fuller notes.");
+        messages.push({ role: "system", content: "A free-provider output cap applies. Return concise valid JSON within the token allowance. For review, use null for sound fields and change only clear factual errors. Never invent padding or discard supported decisions/tasks." });
+        attempt--; continue;
+      }
       if (error instanceof ApiError && error.status === 429 && /daily quota/i.test(error.message) && activeModel === MODELS.record) {
         activeModel = FALLBACK_RECORD_MODEL;
         warnings.push(`The primary minutes model's free daily quota was unavailable. Used ${FALLBACK_RECORD_MODEL} for this request; review the AI draft.`);
-        budget = maxCompletionTokens; adjusted = false; attempt--; continue;
+        budget = maxCompletionTokens; adjusted = false; compactOutput = false; attempt--; continue;
       }
       // A free-plan per-request token reservation can exceed its minute cap.
       // Reduce only the output allowance; never truncate transcript content.

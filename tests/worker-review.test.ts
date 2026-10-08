@@ -7,6 +7,19 @@ const completion = () => new Response(JSON.stringify({ choices: [{ finish_reason
 const request = (path: string, body: object) => new Request(`https://api.test/api/${path}`, { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(body) });
 afterEach(() => vi.unstubAllGlobals());
 describe("model request budget and review boundary", () => {
+  it("handles an impossible output-minute reservation as a budget problem rather than an endless busy retry", async () => {
+    const upstream = vi.fn()
+      .mockResolvedValueOnce(new Response(JSON.stringify({ error: { message: "Rate limit on tokens per day (TPD)" } }), { status: 429 }))
+      .mockResolvedValueOnce(new Response(JSON.stringify({ error: { message: "Request too large on output tokens per minute (OTPM): Limit 1000, Requested 2020." } }), { status: 429 }))
+      .mockResolvedValueOnce(completion());
+    vi.stubGlobal("fetch", upstream);
+    const response = await worker.fetch(request("record", { segments, detail: "detailed" }), env);
+    expect(response.status).toBe(200);
+    const retry = JSON.parse(upstream.mock.calls[2][1].body);
+    expect(retry.max_completion_tokens).toBeLessThan(1000);
+    expect(retry.reasoning_effort).toBe("none");
+    expect((await response.json()).warnings.join()).toContain("more compact");
+  });
   it("uses a distinct free fallback on daily quota exhaustion and reports its actual model", async () => {
     const upstream = vi.fn().mockResolvedValueOnce(new Response(JSON.stringify({ error: { message: "Rate limit on tokens per day (TPD)" } }), { status: 429 })).mockResolvedValueOnce(completion());
     vi.stubGlobal("fetch", upstream);

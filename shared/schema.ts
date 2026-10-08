@@ -5,7 +5,7 @@ export const MODELS = {
   refinement: "openai/gpt-oss-20b",
   record: "openai/gpt-oss-120b",
 } as const;
-export const PROMPT_VERSION = "1.9";
+export const PROMPT_VERSION = "1.10";
 export const FALLBACK_RECORD_MODEL = "qwen/qwen3.8-27b";
 export const MinutesDetailSchema = z.enum(["quick", "standard", "detailed", "full"]);
 export type MinutesDetail = z.infer<typeof MinutesDetailSchema>;

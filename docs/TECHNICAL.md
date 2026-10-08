@@ -1,43 +1,19 @@
-# Technical description
+# Technical notes
 
-## Pipeline
+Prompt/schema version: **1.10**. The architecture and model decisions are explained in the technical report PDF and README.
 
-The React client on GitHub Pages orchestrates three stages, plus an optional corrective-review request to a Cloudflare Worker. Clicking Start runs all stages automatically. The Worker forwards bounded requests to Groq using a server-side secret. No developer laptop or persistent application database is needed.
+Whisper produces timestamped English segments. GPT-OSS 20B proposes narrow terminology patches; exact-span, overlap and ambiguity rules preserve the raw transcript. GPT-OSS 120B generates structured minutes and classifications. An optional pass reviews the draft against the transcript and supplies only corrected fields. A free Qwen fallback is used on primary-model daily quota exhaustion, with actual model metadata and warnings.
 
-1. **Transcription:** Whisper Large V3 (`whisper-large-v3`), English, temperature 0, verbose JSON with segment timestamps. The application retains the raw text unchanged and assigns stable segment IDs. Whisper may still misrecognize speech, especially names and unclear audio. There is no diarization.
-2. **Refinement:** GPT OSS 20B (`openai/gpt-oss-20b`) receives the timestamped segments and optional terminology glossary. It returns exact-span correction proposals through a strict JSON schema. Patches are resolved against the original segment and applied right-to-left. Missing, overlapping or ambiguous spans are left unchanged and noted. This prevents text corruption without restricting the model to verbatim summaries.
-3. **Documentation:** GPT OSS 120B (`openai/gpt-oss-120b`) receives the refined segments. It produces summary bullets, topic-organized minutes, decision candidates, tasks and open questions. Candidates are labeled agreed or unresolved in the same generation; unresolved items remain visible under open questions. The optional corrective review uses the transcript and unverified draft with nullable fields: null preserves a sound field; a changed field supplies its complete corrected value. The draft is cached before review, so retries do not repeat earlier work. Owners/deadlines are nullable, and relative deadlines remain literal.
+The opt-in excerpt reads a bounded WAV/MP3 prefix and resamples locally to mono 16 kHz. It processes at most 180 seconds, labels this scope and preserves original playback. The upload cap remains 24 MiB.
 
-The language models run at temperature 0.1 with bounded completion tokens. Refinement uses low reasoning effort; documentation uses medium. Both stages use structured outputs, which constrain syntax, not truth. Version 1.3 classifies tasks as agreed/proposed and ownership as named/unidentified before generating fields. Explicit later recaps can supply owners; nearby names alone cannot. Proposed work remains in open items. Version 1.9 adds four minutes detail levels, checks later answers across fragmented ASR segments, and distinguishes pending motions from passed votes. This review is a corrective heuristic, not factual verification or formal proof. On a primary-model daily-quota error, the Worker uses the distinct free `qwen/qwen3.8-27b` model and reports that choice in warnings/metadata. Refinement remains a separate GPT OSS 20B stage.
+Restrictive provider output reservations are reduced without truncating the transcript. The Qwen fallback can disable reasoning tokens and request concise JSON to fit its output cap; results warn that detail may be reduced. Retry-After governs temporary failures. No paid fallback is configured.
 
-## Contracts and presentation
+## Deployment
 
-The canonical result includes source metadata, actual configured model IDs, prompt version, raw/refined transcripts, corrections, meeting record and warnings. The UI and Markdown/JSON exports share this data. Null owners/deadlines display as Unspecified. Source segment references, where supplied, navigate to audio timestamps. Invalid references are removed with a warning rather than suppressing the complete result.
+1. Set CLOUDFLARE_ACCOUNT_ID and CLOUDFLARE_API_TOKEN locally. Adjust allowed origins in wrangler.jsonc.
+2. Store the key using `npx wrangler secret put GROQ_API_KEY`, then run `npm run deploy:api`.
+3. Create a Cloudflare Pages project named meeting-spitter-api. In gateway/, run `npx wrangler pages deploy public --project-name meeting-spitter-api --branch main`. Its service binding points to the Worker.
+4. Set VITE_API_BASE to the public API hostname at build time; the current gateway is the default. Deploy dist/ through the supplied GitHub Pages workflow.
+5. For another repository name, update the Vite base path. Set the Pages source to GitHub Actions.
 
-Endpoints: GET `/api/health`, POST `/api/transcribe`, POST `/api/refine`, POST `/api/record`, POST `/api/review`. The Worker rejects unsupported methods, unknown paths, unsupported file extensions, empty files, excessive input and invalid transcript schemas. The frontend checks exact silence when the browser can decode the input; undecodable formats are left to the provider, which reports unreadable audio.
-
-## Recovery and limits
-
-One active run per browser. Completed stages stay in memory and can be downloaded if a later stage fails. Resuming skips completed stages; late cancelled responses cannot overwrite a newer run. The client retries temporary 429/5xx responses up to twice with visible waits, honoring Retry-After up to 120 seconds. Authentication, explicit daily quota exhaustion and invalid inputs are not automatically retried. Invalid model output gets one concise regeneration attempt server-side. A page reload clears the run.
-
-The initial submission supports files up to 24 MiB and transcripts up to 14,000 characters. This deliberate whole-transcript implementation preserves context across the meeting without introducing an untested multi-chunk reconciliation process. Longer audio can yield a downloadable raw transcript but requires a shorter recording for the later stages. Limits are visible in the app; no input is silently truncated. Explicit excerpt mode supports the first 180 seconds of standard WAV/MP3 sources: bounded header/frame parsing, browser decoding/resampling, and a mono 16 kHz PCM upload. The original player remains available; results and every export disclose that later discussion is excluded. Other oversized formats remain blocked.
-
-Language-stage requests omit numeric audio offsets while retaining all segment IDs and words; original timestamps remain in the client. One bounded adjustment of an excessive free-plan output-token reservation reduces only the completion allowance, never the transcript. Insufficient remaining budget produces a clear error. Structured-output syntax alone does not establish correctness.
-
-## Hosting and credentials
-
-GitHub repository and Pages: `Choco-princess/meeting_spitter`. Cloudflare API gateway: `meeting-spitter-api.pages.dev`, forwarding through a service binding to the `meeting-spitter-api` Worker. Groq credentials exist only in an ignored local development file and a Cloudflare secret. The frontend contains the public API URL, not credentials. Fixed routes and model IDs prevent use as an arbitrary authenticated provider proxy. Per-IP limits are 30 requests/minute. CORS limits supported browser origins but is not authentication or a global quota safeguard. `SERVICE_ENABLED=false` pauses service.
-
-No application-level audio or transcript persistence. The third-party providers process the submitted data, and their retention policies apply. Static sample audio and deliberately exported synthetic sample results are public submission artifacts.
-
-## Reproducibility
-
-`npm ci`, `npm test`, `npm run build` reproduce the deterministic checks/build. The lockfile fixes dependencies. An override updates the development-only Sharp dependency used by Wrangler's local emulator; npm audit was clear after installation.
-
-`npm run check:live -- path/to/meeting.wav output-directory` exercises the complete deployed pipeline from new audio, consuming shared free quota. Set `API_BASE` to test a different endpoint and `GLOSSARY` to provide optional spelling context. The script saves outputs; it is not a mock or a replacement for the interactive interface.
-
-The synthetic sample and its original script are documented in `samples/README.md`. It tests specific meaning-preservation cases but is not a benchmark for real-world multi-speaker meetings.
-
-## Free model availability
-
-The fallback was checked against the authenticated Groq model catalog and [Groq structured-output documentation](https://console.groq.com/docs/structured-outputs), which supports strict schemas for Qwen 3.8 27B. Its free quota is separate from the primary model but also finite; see [Groq rate limits](https://console.groq.com/docs/rate-limits). Availability and limits can change. The fallback does not switch providers or use paid inference.
+SERVICE_ENABLED=false pauses the shared backend. Never commit credentials or put provider keys in frontend variables.

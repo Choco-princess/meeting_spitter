@@ -1,19 +1,9 @@
-# Incremental test plan
+# Testing approach
 
-Keep a working submission archive at every checkpoint. Avoid feature expansion until required stages pass. Test requests consume shared free quota; visible waits are expected when many live evaluations run back to back.
+Run npm test and npm run build for deterministic verification. Tests cover patch safety, classification and references, exports, excerpt boundaries, pipeline recovery and Worker quota/review handling.
 
-| Part | Cases | Evidence |
-|---|---|---|
-| Input/API | Empty file, unsupported extension, corrupt WAV, silence, oversized file, empty transcript, invalid JSON, permitted/unknown origin | Deterministic tests and deployed/browser checks |
-| Transcription | Synthetic known script; two natural ICSI research-meeting clips compared with human transcripts; real Kubernetes YouTube clip | Raw outputs and source attribution |
-| Refinement | Misrecognized domain term; original unchanged; negation/numbers preserved; missing/overlapping/ambiguous/no-op patches skipped | Unit tests and live stage evaluation |
-| Minutes | Proposal-only, cancelled task, unassigned work, unresolved question, nearby name, later recap assigning owner | `stage-evaluation.json` with real API outputs |
-| Recovery | Cancellation, completed-stage reuse, temporary quota wait, daily quota error | Pipeline tests and actual free-quota retry during live tests |
-| Large-file excerpts | Valid large WAV and MP3; explicit opt-in; malformed/incomplete headers; bounded frame cuts; cancellation; every export discloses scope | Parser tests and real browser uploads |
-| Detail/review | Four levels on a fixed ten-minute transcript; targeted corrective review; cached draft on failure; actual fallback model metadata | Live outputs compared with an independent text reference |
-| Presentation/export | All tabs, source timestamp seek, TXT/Markdown/JSON/ZIP consistent, narrow viewport | Browser checks and exported canonical record |
-| Hidden checkpoint | Pre-download two unseen YouTube meeting clips, freeze commit/Worker version, randomly choose one, run once before inspecting its transcript | Selection manifest and full output; no prompt tuning on the selected clip before evaluation |
+For live evaluation, write expected content from the Whisper transcript before reading generated minutes. Check proposals versus agreements, unanswered questions, ownership, deadlines, numbers and omissions. Use an unseen real clip after a checkpoint; record partial results and provider failures honestly.
 
-Hidden tests are small usability checks, not a benchmark or a guarantee of factual accuracy. Keep the clip sources and draw unchanged if a result is disappointing. Report failures and limitations alongside successes. A later repair requires another checkpoint and a fresh holdout.
+Browser checks cover upload errors, silence/corruption, large-file excerpt scope, cancellation, result tabs, source playback, downloads and a narrow viewport. Live inference is variable and consumes shared quota; it is not part of deterministic CI.
 
-Nice-to-have additions should be small and independently checked. Speaker identification requires a separate reliable system; the current Groq Whisper API provides timestamps but no speaker-label option. It remains outside this deadline scope. A future named transcript import can preserve names supplied by a meeting platform.
+See VALIDATION.md for completed checks and remaining gaps. Detailed evaluation tools and records are preserved locally outside the public repository.

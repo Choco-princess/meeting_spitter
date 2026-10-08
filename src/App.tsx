@@ -566,7 +566,9 @@ export default function App() {
                       <p>
                         {busy
                           ? "We’re preparing the rest of your record."
-                          : "Resume processing to finish your minutes and action items."}
+                          : result.draftRecord
+                            ? "Your minutes draft is saved. Retry the extra review, or turn it off and select Update minutes to use the saved draft."
+                            : "Resume processing to finish your minutes and action items."}
                       </p>
                       <button onClick={() => setTab("raw")}>
                         Read raw transcript →
